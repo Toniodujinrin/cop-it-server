@@ -1,4 +1,5 @@
-const handlers = require("./handlers");
+const routes = require("./routes");
+
 module.exports = function startup(app) {
   const posts = (currentRoute) => {
     app.post(`/${currentRoute}`, (req, res) => {
@@ -50,9 +51,5 @@ module.exports = function startup(app) {
   };
   posts("products");
   gets("products");
-};
-
-const routes = {
-  products: handlers.products,
-  users: handlers.users,
+  posts("reviews");
 };

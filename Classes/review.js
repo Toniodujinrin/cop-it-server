@@ -12,33 +12,40 @@ module.exports = class Reviews {
   }
 
   async post() {
-    //check if the user is a valid user and if the product is a valid product
-    try {
-      const product = await _data.get("products", this.productId);
-      if (product) {
-        const user = await _data.get("users", this.userId);
-        if (user) {
-          const review = {
-            _id: service.createRandomString(20),
-            review: this.review,
-            author: { firstName: user.firstName, lastName: user.lastName },
-            datePosted: new Date.now(),
-          };
+    if (this.review && this.productId && this.userId) {
+      //check if the user is a valid user and if the product is a valid product
+      try {
+        const product = await _data.get("products", this.productId);
+        if (product) {
+          const user = await _data.get("users", this.userId);
+          if (user) {
+            const review = {
+              _id: service.createRandomString(20),
+              review: this.review,
+              author: { firstName: user.firstName, lastName: user.lastName },
+              datePosted: new Date.now(),
+            };
 
-          _data.post("reviews", review);
+            _data.post("reviews", review);
+          }
+        } else {
+          return {
+            status: StatusCodes.NOT_FOUND,
+            message: "product does not exist",
+          };
         }
-      } else {
+      } catch (error) {
+        console.log(error);
+
         return {
-          status: StatusCodes.NOT_FOUND,
-          message: "product does not exist",
+          status: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: "could not create review",
         };
       }
-    } catch (error) {
-      console.log(error);
-
+    } else {
       return {
-        status: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: "could not create review",
+        status: StatusCodes.BAD_REQUEST,
+        message: "data passed is either incorrect or incomplete",
       };
     }
   }
