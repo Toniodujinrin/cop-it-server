@@ -1,6 +1,7 @@
 const statusCodes = require("http-status-codes").StatusCodes;
 const Service = require("../services");
-const Data = require("../http");
+const Data = require("../Utility-Methods/http");
+const ResponseErrors = require("../Utility-Methods/errors");
 
 const service = new Service();
 const data = new Data();
@@ -8,7 +9,7 @@ const lengthOfProductId = 21;
 
 module.exports = class Product {
   constructor(
-    sellerId,
+    email,
     name,
     category,
     description,
@@ -31,7 +32,8 @@ module.exports = class Product {
       typeof numberInStock == "number" ? numberInStock : false;
     this.imageConfig = imageConfig;
     this.sellerId =
-      typeof sellerId == "string" && sellerId.length > 0 ? sellerId : false;
+      typeof email == "string" && email.length > 0 ? email : false;
+    this.email = typeof email == "string" && email.length > 0 ? email : false;
   }
 
   async post() {
@@ -43,38 +45,39 @@ module.exports = class Product {
       this.price &&
       this.numberInStock &&
       this.imageConfig &&
-      this.sellerId
+      this.sellerId &&
+      this.email
     ) {
-      const product = {
-        _id: service.createRandomString(lengthOfProductId),
-        name: this.name,
-        category: this.category,
-        numberInStock: this.numberInStock,
-        description: this.description,
-        rating: this.rating,
-        price: this.price,
-        imageConfig: this.imageConfig,
-        isAvailable: this.isAvailable,
-        sellerId: this.sellerId,
-      };
-      try {
-        const res = await data.post("products", product);
-        return {
-          status: statusCodes.CREATED,
-          message: "product created successfuly",
+      const user = await data.get("users", this.email);
+      if (user) {
+        const product = {
+          _id: service.createRandomString(lengthOfProductId),
+          name: this.name,
+          category: this.category,
+          numberInStock: this.numberInStock,
+          description: this.description,
+          rating: this.rating,
+          price: this.price,
+          imageConfig: this.imageConfig,
+          isAvailable: this.isAvailable,
+          sellerId: this.sellerId,
         };
-      } catch (error) {
-        return {
-          status: statusCodes.INTERNAL_SERVER_ERROR,
-          message: "unable to create product",
-        };
-      }
-    } else {
-      return {
-        status: statusCodes.BAD_REQUEST,
-        message: "data passed is either incorrect or incomplete",
-      };
-    }
+        try {
+          const res = await data.post("products", product);
+          return {
+            status: statusCodes.CREATED,
+            message: {
+              productId: product._id,
+            },
+          };
+        } catch (error) {
+          return {
+            status: statusCodes.INTERNAL_SERVER_ERROR,
+            message: "unable to create product",
+          };
+        }
+      } else return ResponseErrors.userNotFound;
+    } else return ResponseErrors.incorrectData;
   }
 
   async get(productId) {
@@ -93,23 +96,26 @@ module.exports = class Product {
             status: statusCodes.OK,
             message: product,
           };
-        } else {
-          return {
-            status: statusCodes.NOT_FOUND,
-            message: "product does not exist",
-          };
-        }
+        } else return ResponseErrors.productNotFound;
       } catch (error) {
-        return {
-          status: statusCodes.INTERNAL_SERVER_ERROR,
-          message: "unable to get product",
-        };
+        return ResponseErrors.serverError;
       }
-    } else {
-      return {
-        status: statusCodes.BAD_REQUEST,
-        message: "data passed is either incorrect or incomplete",
-      };
-    }
+    } else return ResponseErrors.incorrectData;
+  }
+  static async delete(productId) {
+    productId = typeof productId == "string" ? productId : false;
+    if (productId) {
+      try {
+        if (await data.get("products", productId)) {
+          await data.delete("products", productId);
+          return {
+            status: 200,
+            message: "Product Deleted ",
+          };
+        } else return ResponseErrors.productNotFound;
+      } catch (error) {
+        return ResponseErrors.serverError;
+      }
+    } else return ResponseErrors.incorrectData;
   }
 };

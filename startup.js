@@ -31,8 +31,19 @@ module.exports = function startup(app) {
       finish(res, currentRoute, "put", data);
     });
   };
+  const deletes = (currentRoute) => {
+    app.delete(`/${currentRoute}`, (req, res) => {
+      const data = {};
+      data.headers = req.headers;
+      data.query = req.query;
+      data.payload = req.body;
+
+      finish(res, currentRoute, "delete", data);
+    });
+  };
 
   const finish = (res, currentRoute, method, data) => {
+    console.log(method);
     routes[currentRoute][method](data, (statusCode, responseObject) => {
       const stringPayload =
         typeof responseObject == "object" && responseObject !== null
@@ -52,4 +63,13 @@ module.exports = function startup(app) {
   posts("products");
   gets("products");
   posts("reviews");
+  posts("users");
+  posts("users/verifyEmail");
+  posts("auth");
+  posts("users/verifyAccount");
+  posts("basket/add");
+  posts("basket/editItemAmount");
+  gets("auth/checkVerified");
+  gets("users/getUserDetails");
+  deletes("products");
 };

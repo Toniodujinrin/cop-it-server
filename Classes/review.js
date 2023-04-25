@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const Data = require("../http");
+const Data = require("../Utility-Methods/http");
 const Services = require("../services");
 const _data = new Data();
 const service = new Services();

@@ -32,4 +32,33 @@ module.exports = class Data {
       client.close;
     }
   }
+
+  async delete(folder, id) {
+    try {
+      await client.connect();
+      const res = await client.db(db).collection(folder).deleteOne({ _id: id });
+      if (res) {
+        return res;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
+  }
+
+  async put(folder, id, data) {
+    try {
+      await client.connect();
+      const res = await client
+        .db(db)
+        .collection(folder)
+        .updateOne({ _id: id }, { $set: data });
+      if (res) {
+        return res;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
+  }
 };
