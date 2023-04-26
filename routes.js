@@ -11,6 +11,7 @@ const routes = {
   "users/getUserDetails": handlers.getUserDetails,
   "basket/add": handlers.addItemToBasket,
   "basket/editItemAmount": handlers.editItemAmount,
+  "users/getAllProductsBeingSoldByUser": handlers.getAllProductsBeingSoldByUser,
 };
 
 module.exports = routes;

@@ -151,5 +151,17 @@ module.exports = class User {
     } else return ResponseErrors.incorrectData;
   }
 
-  static async getAllProductsByUser() {}
+  static async getAllProductsBeingSoldByUser(email) {
+    email = typeof email == "string" && email.length > 0 ? email : false;
+    if (email) {
+      if (await data.get("users", email)) {
+        const products = await data.getAll("products", { sellerId: email });
+
+        return {
+          status: StatusCodes.OK,
+          message: products,
+        };
+      } else return ResponseErrors.userNotFound;
+    } else return ResponseErrors.incorrectData;
+  }
 };

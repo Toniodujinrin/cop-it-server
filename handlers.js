@@ -15,6 +15,7 @@ handlers.checkVerified = {};
 handlers.getUserDetails = {};
 handlers.addItemToBasket = {};
 handlers.editItemAmount = {};
+handlers.getAllProductsBeingSoldByUser = {};
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -45,10 +46,12 @@ handlers.products.delete = async (data, callback) => {
 
 handlers.reviews.post = async (data, callback) => {
   const _data = data.payload;
+  const token = data.headers.token;
   const res = await new Reviews(
     _data.review,
-    _data.productId,
-    _data.userId
+    _data.sellerId,
+    _data.userId,
+    token
   ).post();
   callback(res.status, { data: res.message });
 };
@@ -118,6 +121,12 @@ handlers.editItemAmount.post = async (data, callback) => {
     _data.amount,
     token
   );
+  callback(res.status, { data: res.message });
+};
+
+handlers.getAllProductsBeingSoldByUser.get = async (data, callback) => {
+  const email = data.query.email;
+  const res = await User.getAllProductsBeingSoldByUser(email);
   callback(res.status, { data: res.message });
 };
 

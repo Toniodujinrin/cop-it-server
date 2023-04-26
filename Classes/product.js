@@ -2,6 +2,7 @@ const statusCodes = require("http-status-codes").StatusCodes;
 const Service = require("../services");
 const Data = require("../Utility-Methods/http");
 const ResponseErrors = require("../Utility-Methods/errors");
+const Token = require("./token");
 
 const service = new Service();
 const data = new Data();
@@ -16,7 +17,8 @@ module.exports = class Product {
     isAvailable,
     price,
     numberInStock,
-    imageConfig
+    imageConfig,
+    token
   ) {
     this.name = typeof name == "string" && name.length > 0 ? name : false;
     this.category =
@@ -34,6 +36,8 @@ module.exports = class Product {
     this.sellerId =
       typeof email == "string" && email.length > 0 ? email : false;
     this.email = typeof email == "string" && email.length > 0 ? email : false;
+    this.token =
+      typeof token == "string" && this.token.length > 0 ? token : false;
   }
 
   async post() {
@@ -46,36 +50,40 @@ module.exports = class Product {
       this.numberInStock &&
       this.imageConfig &&
       this.sellerId &&
-      this.email
+      this.email &&
+      this.token
     ) {
       const user = await data.get("users", this.email);
+
       if (user) {
-        const product = {
-          _id: service.createRandomString(lengthOfProductId),
-          name: this.name,
-          category: this.category,
-          numberInStock: this.numberInStock,
-          description: this.description,
-          rating: this.rating,
-          price: this.price,
-          imageConfig: this.imageConfig,
-          isAvailable: this.isAvailable,
-          sellerId: this.sellerId,
-        };
-        try {
-          const res = await data.post("products", product);
-          return {
-            status: statusCodes.CREATED,
-            message: {
-              productId: product._id,
-            },
+        if (Token.validate(this.token, this.email)) {
+          const product = {
+            _id: service.createRandomString(lengthOfProductId),
+            name: this.name,
+            category: this.category,
+            numberInStock: this.numberInStock,
+            description: this.description,
+            rating: this.rating,
+            price: this.price,
+            imageConfig: this.imageConfig,
+            isAvailable: this.isAvailable,
+            sellerId: this.sellerId,
           };
-        } catch (error) {
-          return {
-            status: statusCodes.INTERNAL_SERVER_ERROR,
-            message: "unable to create product",
-          };
-        }
+          try {
+            const res = await data.post("products", product);
+            return {
+              status: statusCodes.CREATED,
+              message: {
+                productId: product._id,
+              },
+            };
+          } catch (error) {
+            return {
+              status: statusCodes.INTERNAL_SERVER_ERROR,
+              message: "unable to create product",
+            };
+          }
+        } else return ResponseErrors.invalidToken;
       } else return ResponseErrors.userNotFound;
     } else return ResponseErrors.incorrectData;
   }

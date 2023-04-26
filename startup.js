@@ -17,7 +17,7 @@ module.exports = function startup(app) {
       data.headers = req.headers;
       data.query = req.query;
       data.payload = req.body;
-      console.log(data);
+
       finish(res, currentRoute, "get", data);
     });
   };
@@ -43,7 +43,6 @@ module.exports = function startup(app) {
   };
 
   const finish = (res, currentRoute, method, data) => {
-    console.log(method);
     routes[currentRoute][method](data, (statusCode, responseObject) => {
       const stringPayload =
         typeof responseObject == "object" && responseObject !== null
@@ -70,6 +69,7 @@ module.exports = function startup(app) {
   posts("basket/add");
   posts("basket/editItemAmount");
   gets("auth/checkVerified");
+  gets("users/getAllProductsBeingSoldByUser");
   gets("users/getUserDetails");
   deletes("products");
 };

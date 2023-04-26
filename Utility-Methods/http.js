@@ -45,6 +45,19 @@ module.exports = class Data {
       throw new Error(error);
     }
   }
+  async getAll(folder, query) {
+    try {
+      await client.connect();
+      const res = await client.db(db).collection(folder).find(query).toArray();
+
+      if (res) {
+        return res;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
+  }
 
   async put(folder, id, data) {
     try {
