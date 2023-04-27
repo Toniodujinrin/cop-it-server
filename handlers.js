@@ -60,6 +60,13 @@ handlers.users.post = async (data, callback) => {
   const res = await new User(_data.email, _data.password).post();
   callback(res.status, { data: res.message });
 };
+handlers.users.get = async (data, callback) => {
+  const email = data.query.email;
+  const token = data.headers.token;
+
+  const res = await User.get(email, token);
+  callback(res.status, { data: res.message });
+};
 
 handlers.verifyEmail.post = async (data, callback) => {
   const _data = data.payload;

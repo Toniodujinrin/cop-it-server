@@ -5,6 +5,7 @@ const service = new Services();
 const data = new Data();
 const Token = require("./token");
 const ResponseErrors = require("../Utility-Methods/errors");
+const { invalidToken } = require("../Utility-Methods/errors");
 
 module.exports = class User {
   constructor(email, password) {
@@ -50,6 +51,21 @@ module.exports = class User {
       }
     } else return ResponseErrors.incorrectData;
   }
+  static async get(email, token) {
+    email = typeof email == "string" ? email : false;
+    token = typeof token == "string" ? token : false;
+    if (email && token) {
+      if (await Token.validate(token, email)) {
+        const user = await data.get("users", email);
+        if (user) {
+          return {
+            status: StatusCodes.OK,
+            message: user,
+          };
+        } else return ResponseErrors.userNotFound;
+      } else return ResponseErrors.invalidToken;
+    } else return ResponseErrors.incorrectData;
+  }
 
   static async verifyAccount(
     email,
@@ -85,18 +101,8 @@ module.exports = class User {
             await data.put("users", email, res);
             const token = await new Token(email).create();
             return { status: StatusCodes.OK, message: token };
-          } else {
-            return {
-              status: StatusCodes.UNAUTHORIZED,
-              message: "invalid token",
-            };
-          }
-        } else {
-          return {
-            status: StatusCodes.NOT_FOUND,
-            message: "user does not exist",
-          };
-        }
+          } else return ResponseErrors.invalidToken;
+        } else return ResponseErrors.userNotFound;
       } catch (error) {
         console.log(error);
         return ResponseErrors.serverError;

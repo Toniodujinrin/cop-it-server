@@ -69,6 +69,7 @@ module.exports = function startup(app) {
   posts("basket/add");
   posts("basket/editItemAmount");
   gets("auth/checkVerified");
+  gets("users");
   gets("users/getAllProductsBeingSoldByUser");
   gets("users/getUserDetails");
   deletes("products");
