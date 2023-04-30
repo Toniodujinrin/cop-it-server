@@ -37,7 +37,7 @@ module.exports = class User {
           data.post("codes", codeObject);
         });
 
-        const token = new Token(this.email).create();
+        const token = await new Token(this.email).create();
 
         return {
           status: StatusCodes.CREATED,
