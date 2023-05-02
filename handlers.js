@@ -16,6 +16,7 @@ handlers.getUserDetails = {};
 handlers.addItemToBasket = {};
 handlers.editItemAmount = {};
 handlers.getAllProductsBeingSoldByUser = {};
+handlers.sendEmailCode = {};
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -98,6 +99,12 @@ handlers.checkVerified.get = async (data, callback) => {
   const email = data.query.email;
   const token = data.headers.token;
   const res = await Auth.checkVerified(email, token);
+  callback(res.status, { data: res.message });
+};
+handlers.sendEmailCode.post = async (data, callback) => {
+  const email = data.query.email;
+
+  const res = await Auth.sendEmailCode(email);
   callback(res.status, { data: res.message });
 };
 

@@ -76,4 +76,30 @@ module.exports = class Auth {
       return ResponseErrors.incorrectData;
     }
   };
+
+  static sendEmailCode = async (email) => {
+    email = typeof email == "string" ? email : false;
+    if (email) {
+      try {
+        const user = await data.get("users", email);
+        if (user) {
+          service.emailCodeSender(user.email, 5, (code) => {
+            const codeObject = {
+              _id: code,
+              code: code,
+              user: email,
+              expiry: Date.now() + 60 * 5 * 1000,
+            };
+            data.post("codes", codeObject);
+            return {
+              status: StatusCodes.OK,
+              message: "Code Sent",
+            };
+          });
+        } else return ResponseErrors.userNotFound;
+      } catch (error) {
+        ResponseErrors.serverError;
+      }
+    } else return ResponseErrors.incorrectData;
+  };
 };

@@ -12,6 +12,7 @@ const routes = {
   "basket/add": handlers.addItemToBasket,
   "basket/editItemAmount": handlers.editItemAmount,
   "users/getAllProductsBeingSoldByUser": handlers.getAllProductsBeingSoldByUser,
+  "auth/sendEmailCode": handlers.sendEmailCode,
 };
 
 module.exports = routes;
