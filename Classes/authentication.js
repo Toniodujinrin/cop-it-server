@@ -91,14 +91,14 @@ module.exports = class Auth {
               expiry: Date.now() + 60 * 5 * 1000,
             };
             data.post("codes", codeObject);
-            return {
-              status: StatusCodes.OK,
-              message: "Code Sent",
-            };
           });
+          return {
+            status: StatusCodes.OK,
+            message: "Code Sent",
+          };
         } else return ResponseErrors.userNotFound;
       } catch (error) {
-        ResponseErrors.serverError;
+        return ResponseErrors.serverError;
       }
     } else return ResponseErrors.incorrectData;
   };
