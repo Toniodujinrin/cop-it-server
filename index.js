@@ -3,7 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 const startup = require("./startup");
 const bodyParser = require("body-parser");
-
+const app = express();
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
   bodyParser.urlencoded({
@@ -12,7 +12,7 @@ app.use(
     parameterLimit: 50000,
   })
 );
-const app = express();
+
 app.use(cors());
 app.use(bodyParser.json());
 startup(app);
