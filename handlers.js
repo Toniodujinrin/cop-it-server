@@ -21,16 +21,17 @@ handlers.sendEmailCode = {};
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
   console.log(_data.email);
+  const token = data.headers.token;
 
   const res = await new Product(
     _data.email,
     _data.name,
     _data.category,
     _data.description,
-    _data.isAvailable,
     _data.price,
     _data.numberInStock,
-    _data.imageConfig
+    _data.imageConfig,
+    token
   ).post();
   callback(res.status, { data: res.message });
 };

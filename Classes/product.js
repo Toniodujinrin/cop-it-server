@@ -15,7 +15,6 @@ module.exports = class Product {
     name,
     category,
     description,
-    isAvailable,
     price,
     numberInStock,
     imageConfig,
@@ -29,7 +28,7 @@ module.exports = class Product {
       typeof description == "string" && description.length > 0
         ? description
         : false;
-    this.isAvailable = typeof isAvailable == "boolean" ? isAvailable : false;
+    this.isAvailable = true;
     this.price = typeof price == "number" && price > 0 ? price : false;
     this.numberInStock =
       typeof numberInStock == "number" ? numberInStock : false;
@@ -37,8 +36,7 @@ module.exports = class Product {
     this.sellerId =
       typeof email == "string" && email.length > 0 ? email : false;
     this.email = typeof email == "string" && email.length > 0 ? email : false;
-    this.token =
-      typeof token == "string" && this.token.length > 0 ? token : false;
+    this.token = typeof token == "string" && token.length > 0 ? token : false;
   }
 
   async post() {
