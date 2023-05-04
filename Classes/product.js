@@ -57,12 +57,16 @@ module.exports = class Product {
       if (user) {
         if (Token.validate(this.token, this.email)) {
           this.imageConfig = this.imageConfig.forEach(async (image) => {
-            try {
-              const { publicId, url } = await Image.upload("products", image);
-              return { publicId: publicId, url: url };
-            } catch (error) {
-              console.log(error);
-            }
+            const reader = new FileReader();
+            reader.readAsDataUR(image);
+            reader.onloadend = async () => {
+              try {
+                const { publicId, url } = await Image.upload("products", image);
+                return { publicId: publicId, url: url };
+              } catch (error) {
+                console.log(error);
+              }
+            };
           });
           const product = {
             _id: service.createRandomString(lengthOfProductId),

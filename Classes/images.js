@@ -8,10 +8,15 @@ cloudinary.config({
 
 class Images {
   static upload = async (folder, image) => {
-    const res = await cloudinary.uploader.upload(image, {
-      folder: folder,
-    });
-    return { publicId: res.public_id, url: res.secure_url };
+    try {
+      const res = await cloudinary.uploader.upload(image, {
+        folder: folder,
+      });
+      console.log(res);
+      return { publicId: res.public_id, url: res.secure_url };
+    } catch (err) {
+      console.log(err);
+    }
   };
 }
 
