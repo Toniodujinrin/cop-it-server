@@ -3,6 +3,7 @@ const Service = require("../services");
 const Data = require("../Utility-Methods/http");
 const ResponseErrors = require("../Utility-Methods/errors");
 const Token = require("./token");
+const Image = require("./images");
 
 const service = new Service();
 const data = new Data();
@@ -57,6 +58,14 @@ module.exports = class Product {
 
       if (user) {
         if (Token.validate(this.token, this.email)) {
+          this.imageConfig = this.imageConfig.forEach(async (image) => {
+            try {
+              const { publicId, url } = await Image.upload("products", image);
+              return { publicId: publicId, url: url };
+            } catch (error) {
+              console.log(error);
+            }
+          });
           const product = {
             _id: service.createRandomString(lengthOfProductId),
             name: this.name,
