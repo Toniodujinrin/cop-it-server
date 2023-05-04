@@ -17,7 +17,7 @@ module.exports = class Product {
     description,
     price,
     numberInStock,
-    imageConfig,
+
     token
   ) {
     this.name = typeof name == "string" && name.length > 0 ? name : false;
@@ -32,7 +32,7 @@ module.exports = class Product {
     this.price = typeof price == "number" && price > 0 ? price : false;
     this.numberInStock =
       typeof numberInStock == "number" ? numberInStock : false;
-    this.imageConfig = imageConfig;
+
     this.sellerId =
       typeof email == "string" && email.length > 0 ? email : false;
     this.email = typeof email == "string" && email.length > 0 ? email : false;
@@ -47,7 +47,6 @@ module.exports = class Product {
       this.isAvailable &&
       this.price &&
       this.numberInStock &&
-      this.imageConfig &&
       this.sellerId &&
       this.email &&
       this.token
@@ -56,18 +55,6 @@ module.exports = class Product {
 
       if (user) {
         if (Token.validate(this.token, this.email)) {
-          this.imageConfig = this.imageConfig.forEach(async (image) => {
-            const reader = new FileReader();
-            reader.readAsDataUR(image);
-            reader.onloadend = async () => {
-              try {
-                const { publicId, url } = await Image.upload("products", image);
-                return { publicId: publicId, url: url };
-              } catch (error) {
-                console.log(error);
-              }
-            };
-          });
           const product = {
             _id: service.createRandomString(lengthOfProductId),
             name: this.name,
@@ -76,7 +63,7 @@ module.exports = class Product {
             description: this.description,
             rating: this.rating,
             price: this.price,
-            imageConfig: this.imageConfig,
+
             isAvailable: this.isAvailable,
             sellerId: this.sellerId,
           };

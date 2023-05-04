@@ -4,6 +4,7 @@ const Product = require("./Classes/product");
 const Reviews = require("./Classes/review");
 const User = require("./Classes/users");
 const Basket = require("./Classes/basket");
+const Image = require("./Classes/images");
 
 handlers.products = {};
 handlers.reviews = {};
@@ -17,6 +18,7 @@ handlers.addItemToBasket = {};
 handlers.editItemAmount = {};
 handlers.getAllProductsBeingSoldByUser = {};
 handlers.sendEmailCode = {};
+handlers.uploadProductImage = {};
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -30,7 +32,7 @@ handlers.products.post = async (data, callback) => {
     _data.description,
     _data.price,
     _data.numberInStock,
-    _data.imageConfig,
+
     token
   ).post();
   callback(res.status, { data: res.message });
@@ -142,6 +144,14 @@ handlers.editItemAmount.post = async (data, callback) => {
 handlers.getAllProductsBeingSoldByUser.get = async (data, callback) => {
   const email = data.query.email;
   const res = await User.getAllProductsBeingSoldByUser(email);
+  callback(res.status, { data: res.message });
+};
+
+handlers.uploadProductImage.post = async (data, callback) => {
+  const _data = data.payload;
+  const productId = _data.productId;
+  const image = _data.image;
+  const res = await Image.uploadProductImage(image, productId);
   callback(res.status, { data: res.message });
 };
 

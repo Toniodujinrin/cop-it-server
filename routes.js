@@ -13,6 +13,7 @@ const routes = {
   "basket/editItemAmount": handlers.editItemAmount,
   "users/getAllProductsBeingSoldByUser": handlers.getAllProductsBeingSoldByUser,
   "auth/sendEmailCode": handlers.sendEmailCode,
+  "images/uploadProductImage": handlers.uploadProductImage,
 };
 
 module.exports = routes;
