@@ -26,12 +26,12 @@ class Images {
   };
 
   static uploadProductImage = async (image, productId) => {
-    const productId = typeof productId == "string" ? productId : false;
-    const image = typeof image == "string" ? image : false;
+    productId = typeof productId == "string" ? productId : false;
+    image = typeof image == "string" ? image : false;
     if (productId && image) {
       try {
         const product = await data.get("products", productId);
-        if (product) {
+        if (productId) {
           const { publicId, url } = await this.upload("products", image);
           const imageConfig = {
             publicId: publicId,
