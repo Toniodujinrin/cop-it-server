@@ -32,9 +32,9 @@ class Images {
       try {
         const product = await data.get("products", productId);
         if (productId) {
-          const { publicId, url } = await this.upload("products", image);
+          const { public_id, url } = await this.upload("products", image);
           const imageConfig = {
-            publicId: publicId,
+            publicId: public_id,
             url: url,
           };
           product.imageConfig.push(imageConfig);
