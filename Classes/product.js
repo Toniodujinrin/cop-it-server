@@ -63,7 +63,7 @@ module.exports = class Product {
             description: this.description,
             rating: this.rating,
             price: this.price,
-
+            imageConfig: [],
             isAvailable: this.isAvailable,
             sellerId: this.sellerId,
           };

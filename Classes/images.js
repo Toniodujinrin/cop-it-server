@@ -18,7 +18,7 @@ class Images {
       const res = await cloudinary.uploader.upload(image, {
         folder: folder,
       });
-      console.log(res);
+
       return { publicId: res.public_id, url: res.secure_url };
     } catch (err) {
       console.log(err);
@@ -32,11 +32,8 @@ class Images {
       try {
         const product = await data.get("products", productId);
         if (productId) {
-          const { public_id, url } = await this.upload("products", image);
-          const imageConfig = {
-            publicId: public_id,
-            url: url,
-          };
+          const imageConfig = await this.upload("products", image);
+
           product.imageConfig.push(imageConfig);
           await data.put("products", productId, product);
           return {
