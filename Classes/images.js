@@ -34,7 +34,7 @@ class Images {
         if (productId) {
           const imageConfig = await this.upload("products", image);
 
-          product.imageConfig.push(imageConfig);
+          product.imageConfig.unshift(imageConfig);
           await data.put("products", productId, product);
           return {
             status: StatusCodes.OK,
