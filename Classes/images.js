@@ -38,7 +38,7 @@ class Images {
             url: url,
           };
           product.imageConfig.push(imageConfig);
-          data.put("products", productId, product);
+          await data.put("products", productId, product);
           return {
             status: StatusCodes.OK,
             message: "Product created",
