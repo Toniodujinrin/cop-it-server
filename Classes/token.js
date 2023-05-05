@@ -11,7 +11,7 @@ module.exports = class Token {
   async create() {
     const tokenObject = {
       _id: service.createRandomString(25),
-      expiry: Date.now() + 60 * 60 * 1000,
+      expiry: Date.now() + 24 * 60 * 60 * 1000,
       user: this.user,
     };
     try {
