@@ -38,7 +38,7 @@ class Images {
           await data.put("products", productId, product);
           return {
             status: StatusCodes.OK,
-            message: "Product created",
+            message: product,
           };
         } else return ResponseErrors.productNotFound;
       } catch (error) {
