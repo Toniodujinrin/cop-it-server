@@ -87,10 +87,7 @@ module.exports = class Product {
   }
 
   async get(productId) {
-    productId =
-      typeof productId == "string" && productId.length == lengthOfProductId
-        ? productId
-        : false;
+    productId = typeof productId == "string" ? productId : false;
 
     if (productId) {
       try {
