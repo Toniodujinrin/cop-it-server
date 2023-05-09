@@ -51,7 +51,7 @@ class Images {
     email = typeof email == "string" ? email : false;
     image = typeof image == "string" ? image : false;
     console.log(image, token, email);
-    if (productId && image) {
+    if (email && image) {
       try {
         const user = await data.get("users", email);
         if (await Token.validate(token, email)) {
