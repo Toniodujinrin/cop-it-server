@@ -60,10 +60,11 @@ class Images {
           await data.put("users", email, user);
           return {
             status: StatusCodes.OK,
-            message: product,
+            message: user,
           };
         } else return ResponseErrors.userNotFound;
       } catch (error) {
+        console.log(error);
         return ResponseErrors.serverError;
       }
     } else return ResponseErrors.incorrectData;
