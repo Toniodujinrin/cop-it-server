@@ -50,10 +50,11 @@ class Images {
   static uploadUserImage = async (image, email, token) => {
     email = typeof email == "string" ? email : false;
     image = typeof image == "string" ? image : false;
-    if (productId && image && (await Token.validate(token, email))) {
+    console.log(image, token, email);
+    if (productId && image) {
       try {
         const user = await data.get("users", email);
-        if (user) {
+        if (await Token.validate(token, email)) {
           const imageConfig = await this.upload("users", image);
           user.imageConfig = imageConfig;
           await data.put("users", email, user);
