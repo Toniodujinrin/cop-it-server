@@ -14,6 +14,7 @@ const routes = {
   "users/getAllProductsBeingSoldByUser": handlers.getAllProductsBeingSoldByUser,
   "auth/sendEmailCode": handlers.sendEmailCode,
   "images/uploadProductImage": handlers.uploadProductImage,
+  "images/uploadUserImage": handlers.uploadUserImage,
 };
 
 module.exports = routes;

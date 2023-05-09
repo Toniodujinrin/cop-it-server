@@ -66,6 +66,7 @@ module.exports = function startup(app) {
   posts("users/verifyEmail");
   posts("auth");
   posts("users/verifyAccount");
+  posts("images/uploadUserImage");
 
   posts("images/uploadProductImage");
   posts("basket/add");

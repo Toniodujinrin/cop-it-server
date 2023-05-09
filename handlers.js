@@ -19,6 +19,7 @@ handlers.editItemAmount = {};
 handlers.getAllProductsBeingSoldByUser = {};
 handlers.sendEmailCode = {};
 handlers.uploadProductImage = {};
+handlers.uploadUserImage = {};
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -152,6 +153,15 @@ handlers.uploadProductImage.post = async (data, callback) => {
   const productId = _data.productId;
   const image = _data.image;
   const res = await Image.uploadProductImage(image, productId);
+  callback(res.status, { data: res.message });
+};
+
+handlers.uploadUserImage.post = async (data, callback) => {
+  const _data = data.payload;
+  const email = _data.email;
+  const image = _data.image;
+  const token = data.headers.token;
+  const res = await Image.uploadUserImage(image, email, token);
   callback(res.status, { data: res.message });
 };
 

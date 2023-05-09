@@ -31,7 +31,7 @@ class Images {
     if (productId && image) {
       try {
         const product = await data.get("products", productId);
-        if (productId) {
+        if (product) {
           const imageConfig = await this.upload("products", image);
 
           product.imageConfig.unshift(imageConfig);
@@ -41,6 +41,27 @@ class Images {
             message: product,
           };
         } else return ResponseErrors.productNotFound;
+      } catch (error) {
+        return ResponseErrors.serverError;
+      }
+    } else return ResponseErrors.incorrectData;
+  };
+
+  static uploadUserImage = async (image, email, token) => {
+    email = typeof email == "string" ? email : false;
+    image = typeof image == "string" ? image : false;
+    if (productId && image && (await Token.validate(token, email))) {
+      try {
+        const user = await data.get("users", email);
+        if (user) {
+          const imageConfig = await this.upload("users", image);
+          user.imageConfig = imageConfig;
+          await data.put("users", email, user);
+          return {
+            status: StatusCodes.OK,
+            message: product,
+          };
+        } else return ResponseErrors.userNotFound;
       } catch (error) {
         return ResponseErrors.serverError;
       }
