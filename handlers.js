@@ -20,6 +20,7 @@ handlers.getAllProductsBeingSoldByUser = {};
 handlers.sendEmailCode = {};
 handlers.uploadProductImage = {};
 handlers.uploadUserImage = {};
+handlers.getBasket = {};
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -117,6 +118,13 @@ handlers.getUserDetails.get = async (data, callback) => {
   const token = data.headers.token;
   const res = await User.getUserDetails(email, token);
   callback(res.status, { data: res.message });
+};
+
+handlers.getBasket.get = async (data, callback) => {
+  const email = data.query.email;
+  const token = data.headers.token;
+  const res = await Basket.getBasket(email, token);
+  callback(res.message, { data: res.message });
 };
 
 handlers.addItemToBasket.post = async (data, callback) => {

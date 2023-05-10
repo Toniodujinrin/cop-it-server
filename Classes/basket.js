@@ -4,13 +4,35 @@ const ResponseErrors = require("../Utility-Methods/errors");
 const { StatusCodes } = require("http-status-codes");
 const data = new Data();
 class Basket {
+  static async getBasket(email, token) {
+    email = typeof email == "string" && email.length > 0 ? email : false;
+    token = typeof token == "string" && token.length > 0 ? token : false;
+    if (token && email) {
+      const user = await data.get("users", email);
+      if (user && (await Token.validate(token, email))) {
+        const basket = await data.get("baskets", email);
+        if (basket) {
+          return {
+            status: StatusCodes.OK,
+            message: basket,
+          };
+        } else {
+          return {
+            status: StatusCodes.OK,
+            message: {},
+          };
+        }
+      } else return ResponseErrors.invalidToken;
+    } else return ResponseErrors.incorrectData;
+  }
+
   static async editItemAmount(email, productId, amount, token) {
     email = typeof email == "string" && email.length > 0 ? email : false;
     productId =
       typeof productId == "string" && productId.length > 0 ? productId : false;
     amount = typeof amount == "number" || amount === 0 ? amount : false;
     token = typeof token == "string" && token.length > 0 ? token : false;
-    console.log(email, productId, amount, token);
+
     if (email && productId && token) {
       try {
         const user = await data.get("users", email);

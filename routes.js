@@ -9,6 +9,7 @@ const routes = {
   "users/verifyAccount": handlers.verifyAccount,
   "auth/checkVerified": handlers.checkVerified,
   "users/getUserDetails": handlers.getUserDetails,
+  "basket/getBasket": handlers.getBasket,
   "basket/add": handlers.addItemToBasket,
   "basket/editItemAmount": handlers.editItemAmount,
   "users/getAllProductsBeingSoldByUser": handlers.getAllProductsBeingSoldByUser,
