@@ -12,7 +12,6 @@ app.use(
     parameterLimit: 50000,
   })
 );
-
 app.use(cors());
 app.use(bodyParser.json());
 startup(app);
