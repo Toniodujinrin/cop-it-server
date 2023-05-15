@@ -21,6 +21,7 @@ handlers.sendEmailCode = {};
 handlers.uploadProductImage = {};
 handlers.uploadUserImage = {};
 handlers.getBasket = {};
+handlers.getProfile = {};
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -71,6 +72,11 @@ handlers.users.get = async (data, callback) => {
   const token = data.headers.token;
 
   const res = await User.get(email, token);
+  callback(res.status, { data: res.message });
+};
+handlers.getProfile.get = async (data, callback) => {
+  const email = data.query.email;
+  const res = await User.getProfile(email);
   callback(res.status, { data: res.message });
 };
 

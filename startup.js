@@ -67,7 +67,6 @@ module.exports = function startup(app) {
   posts("auth");
   posts("users/verifyAccount");
   posts("images/uploadUserImage");
-
   posts("images/uploadProductImage");
   posts("basket/add");
   posts("basket/editItemAmount");
@@ -77,5 +76,6 @@ module.exports = function startup(app) {
   gets("basket/getBasket");
   gets("users/getAllProductsBeingSoldByUser");
   gets("users/getUserDetails");
+  gets("users/getProfile");
   deletes("products");
 };

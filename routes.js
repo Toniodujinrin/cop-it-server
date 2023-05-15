@@ -16,6 +16,7 @@ const routes = {
   "auth/sendEmailCode": handlers.sendEmailCode,
   "images/uploadProductImage": handlers.uploadProductImage,
   "images/uploadUserImage": handlers.uploadUserImage,
+  "users/getProfile": handlers.getProfile,
 };
 
 module.exports = routes;

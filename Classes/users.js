@@ -170,4 +170,23 @@ module.exports = class User {
       } else return ResponseErrors.userNotFound;
     } else return ResponseErrors.incorrectData;
   }
+
+  static async getProfile(email) {
+    email = typeof email == "string" && email.length > 0 ? email : false;
+    if (email) {
+      const user = await data.get("users", email);
+      if (user && user.emailVerified && user.accountVerified) {
+        const profile = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phone: user.phone,
+          imageConfig: user.imageConfig,
+        };
+        return {
+          status: StatusCodes.OK,
+          message: profile,
+        };
+      } else return ResponseErrors.userNotFound;
+    } else return ResponseErrors.incorrectData;
+  }
 };
