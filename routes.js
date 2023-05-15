@@ -17,6 +17,7 @@ const routes = {
   "images/uploadProductImage": handlers.uploadProductImage,
   "images/uploadUserImage": handlers.uploadUserImage,
   "users/getProfile": handlers.getProfile,
+  "reviews/getAllReviewsAboutUser": handlers.getAllReviewsAboutUser,
 };
 
 module.exports = routes;

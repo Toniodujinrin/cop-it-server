@@ -23,6 +23,7 @@ module.exports = class User {
         emailVerified: false,
         accountVerified: false,
         timeCreated: Date.now(),
+        imageConfig: {},
       };
       try {
         const res = await data.post("users", user);
@@ -175,6 +176,7 @@ module.exports = class User {
     email = typeof email == "string" && email.length > 0 ? email : false;
     if (email) {
       const user = await data.get("users", email);
+
       if (user && user.emailVerified && user.accountVerified) {
         const profile = {
           firstName: user.firstName,

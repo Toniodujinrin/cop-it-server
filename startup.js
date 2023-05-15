@@ -73,6 +73,7 @@ module.exports = function startup(app) {
   posts("auth/sendEmailCode");
   gets("auth/checkVerified");
   gets("users");
+  gets("reviews/getAllReviewsAboutUser");
   gets("basket/getBasket");
   gets("users/getAllProductsBeingSoldByUser");
   gets("users/getUserDetails");

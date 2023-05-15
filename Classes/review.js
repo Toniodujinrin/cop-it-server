@@ -27,7 +27,11 @@ module.exports = class Reviews {
                 _id: service.createRandomString(20),
                 review: this.review,
                 userId: this.userId,
-                author: { firstName: user.firstName, lastName: user.lastName },
+                author: {
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                  imageUrl: user.imageConfig,
+                },
                 datePosted: Date.now(),
                 seller: this.sellerId,
               };

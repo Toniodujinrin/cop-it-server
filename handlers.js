@@ -22,6 +22,7 @@ handlers.uploadProductImage = {};
 handlers.uploadUserImage = {};
 handlers.getBasket = {};
 handlers.getProfile = {};
+handlers.getAllReviewsAboutUser = {};
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -60,6 +61,11 @@ handlers.reviews.post = async (data, callback) => {
     _data.userId,
     token
   ).post();
+  callback(res.status, { data: res.message });
+};
+handlers.getAllReviewsAboutUser.get = async (data, callback) => {
+  const email = data.query.email;
+  const res = await Reviews.getAllReviesAboutUser(email);
   callback(res.status, { data: res.message });
 };
 handlers.users.post = async (data, callback) => {
