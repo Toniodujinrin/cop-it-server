@@ -133,6 +133,8 @@ class Basket {
       }
     } else return ResponseErrors.incorrectData;
   }
+
+  static async removeItem(productId, token, email) {}
 }
 
 module.exports = Basket;
