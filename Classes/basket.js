@@ -134,7 +134,37 @@ class Basket {
     } else return ResponseErrors.incorrectData;
   }
 
-  static async removeItem(productId, token, email) {}
+  static async removeItem(productId, token, email) {
+    email = typeof email == "string" && email.length > 0 ? email : false;
+    productId =
+      typeof productId == "string" && productId.length > 0 ? productId : false;
+
+    token = typeof token == "string" && token.length > 0 ? token : false;
+
+    if ((email, productId, token)) {
+      try {
+        if (await Token.validate(token, email)) {
+          const basket = await data.get("baskets", email);
+          if (basket) {
+            const product = basket.items.find(
+              (item) => item.product._id == productId
+            );
+            if (product) {
+              basket.items = basket.items.filter((item) => item !== product);
+              await data.put("baskets", email, basket);
+              console.log(basket, basket.items, product);
+              return {
+                status: StatusCodes.OK,
+                message: "Item removed from basket",
+              };
+            } else return ResponseErrors.productNotFound;
+          } else return ResponseErrors.basketEmpty;
+        } else return ResponseErrors.invalidToken;
+      } catch (error) {
+        return ResponseErrors.serverError;
+      }
+    } else return ResponseErrors.incorrectData;
+  }
 }
 
 module.exports = Basket;

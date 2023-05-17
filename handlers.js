@@ -23,6 +23,7 @@ handlers.uploadUserImage = {};
 handlers.getBasket = {};
 handlers.getProfile = {};
 handlers.getAllReviewsAboutUser = {};
+handlers.removeItem = {};
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -148,6 +149,13 @@ handlers.addItemToBasket.post = async (data, callback) => {
     _data.amount,
     token
   );
+  callback(res.status, { data: res.message });
+};
+handlers.removeItem.post = async (data, callback) => {
+  const _data = data.payload;
+  const token = data.headers.token;
+  const res = await Basket.removeItem(_data.productId, token, _data.email);
+
   callback(res.status, { data: res.message });
 };
 handlers.editItemAmount.post = async (data, callback) => {
