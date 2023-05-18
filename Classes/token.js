@@ -35,7 +35,7 @@ module.exports = class Token {
       }
     } catch (error) {
       console.log(error);
-      throw new Error("an error occure validating token");
+      return false
     }
   }
 };
