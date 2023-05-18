@@ -42,7 +42,8 @@ module.exports = class Auth {
   email = typeof email == "string" ? email : false;
   if(email){
     try {
-      const user = await data.get('users',user)
+
+      const user = await data.get('users',email)
     if(user){
       const token = await new Token(user).create()
       return {
@@ -52,6 +53,7 @@ module.exports = class Auth {
     }
     else return ResponseErrors.userNotFound
     } catch (error) {
+      
        return ResponseErrors.serverError
     }
     

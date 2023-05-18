@@ -102,6 +102,7 @@ handlers.auth.post = async (data, callback) => {
 
 handlers.googleAuthiticate.post = async(data,callback)=>{
   const email = data.payload.email
+  
   const res = await Auth.googleAuthenticate(email)
   callback(res.status,{data:res.message})
 }
