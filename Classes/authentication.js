@@ -21,6 +21,7 @@ module.exports = class Auth {
         const hashedPassword = service.stringHasher(this.password);
         if (res && hashedPassword == res.password) {
           const tokenRes = await new Token(this.user).create();
+          console.log(tokenRes,this.user)
           return { status: StatusCodes.CREATED, message: tokenRes };
         } else {
           return {

@@ -12,7 +12,7 @@ module.exports = class Token {
     const tokenObject = {
       _id: service.createRandomString(25),
       expiry: Date.now() + 24 * 60 * 60 * 1000,
-      user: this.user.email,
+      user: this.user
     };
     try {
       await data.post("tokens", tokenObject);
