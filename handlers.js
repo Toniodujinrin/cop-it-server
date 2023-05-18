@@ -24,6 +24,7 @@ handlers.getBasket = {};
 handlers.getProfile = {};
 handlers.getAllReviewsAboutUser = {};
 handlers.removeItem = {};
+handlers.googleAuthiticate ={}
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -98,6 +99,12 @@ handlers.auth.post = async (data, callback) => {
   const res = await new Auth(_data.email, _data.password).authorize();
   callback(res.status, { data: res.message });
 };
+
+handlers.googleAuthiticate.post = async(data,callback)=>{
+  const email = data.payload.email
+  const res = await Auth.googleAuthenticate(email)
+  callback(res.status,{data:res.message})
+}
 
 handlers.verifyAccount.post = async (data, callback) => {
   const _data = data.payload;

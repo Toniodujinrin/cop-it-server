@@ -19,6 +19,7 @@ const routes = {
   "users/getProfile": handlers.getProfile,
   "reviews/getAllReviewsAboutUser": handlers.getAllReviewsAboutUser,
   "basket/removeItem": handlers.removeItem,
+  'auth/googleAuthenticate':handlers.googleAuthiticate
 };
 
 module.exports = routes;

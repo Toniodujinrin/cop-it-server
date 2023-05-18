@@ -69,6 +69,7 @@ module.exports = function startup(app) {
   posts("images/uploadUserImage");
   posts("images/uploadProductImage");
   posts("basket/add");
+  posts('auth/googleAuthenticate')
   posts("basket/editItemAmount");
   posts("auth/sendEmailCode");
   posts("basket/removeItem");

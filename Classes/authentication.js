@@ -38,6 +38,28 @@ module.exports = class Auth {
     }
   }
 
+  static async googleAuthenticate(email){
+  email = typeof email == "string" ? email : false;
+  if(email){
+    try {
+      const user = await data.get('users',user)
+    if(user){
+      const token = await new Token(user).create()
+      return {
+        status:StatusCodes.OK,
+        message:token
+      }
+    }
+    else return ResponseErrors.userNotFound
+    } catch (error) {
+       return ResponseErrors.serverError
+    }
+    
+  }
+  else return ResponseErrors.incorrectData
+
+  }
+
   static checkVerified = async (email, token) => {
     token = typeof token == "string" ? token : false;
     email = typeof email == "string" ? email : false;
