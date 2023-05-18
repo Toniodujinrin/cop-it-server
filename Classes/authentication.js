@@ -46,7 +46,7 @@ module.exports = class Auth {
 
       const user = await data.get('users',email)
     if(user){
-      const token = await new Token(user).create()
+      const token = await new Token(email).create()
       return {
         status:StatusCodes.OK,
         message:token
