@@ -6,17 +6,18 @@ const Token = require("./token");
 const _data = new Data();
 const service = new Services();
 module.exports = class Reviews {
-  constructor(review, sellerId, userId, token) {
+  constructor(review, sellerId, userId, token,rating) {
     this.review =
       typeof review == "string" && review.length > 0 ? review : false;
     this.sellerId =
       typeof sellerId == "string" && sellerId.length > 0 ? sellerId : false;
     this.userId = typeof userId == "string" ? userId : false;
     this.token = token;
+    this.rating = typeof rating =='number'?rating:false 
   }
 
   async post() {
-    if (this.review && this.sellerId && this.userId) {
+    if (this.review && this.sellerId && this.userId, this.rating) {
       try {
         const seller = await _data.get("users", this.sellerId);
         if (seller) {
@@ -27,10 +28,12 @@ module.exports = class Reviews {
                 _id: service.createRandomString(20),
                 review: this.review,
                 userId: this.userId,
+                rating: this.rating,
                 author: {
+                  
                   firstName: user.firstName,
                   lastName: user.lastName,
-                  imageUrl: user.imageConfig,
+                  imageConfig: user.imageConfig,
                 },
                 datePosted: Date.now(),
                 seller: this.sellerId,
@@ -49,6 +52,63 @@ module.exports = class Reviews {
     } else return ResponseErrors.incorrectData;
   }
 
+  static async reviewProduct(productId,email,token, review, rating){
+    review =typeof review == "string" && review.length > 0 ? review : false;
+    rating = typeof rating=='number'?rating:false
+    productId = typeof productId == "string" ?productId : false;
+    token = typeof token =='string'?token:false 
+    email = typeof email =='string'?email:false 
+    if(review,productId,token,email,rating){
+      try {
+        const user = await _data.get('users',email)
+        if(user){
+          const product = await _data.get('products',productId)
+        if(product){
+          if(Token.validate(token,email)){
+            const productReview ={
+              _id:service.createRandomString(20),
+              review:review,
+              rating:rating,
+              productId:productId,
+              userId:email,
+              author:{
+                firstName:user.firstName,
+                lastName:user.lastName,
+                imageConfig:user.imageConfig
+
+              },
+              datePosted:Date.now()
+            }
+            _data.post('productReviews',productReview)
+
+          }else return ResponseErrors.invalidToken
+
+
+          } else return ResponseErrors.productNotFound
+
+        }else return ResponseErrors.userNotFound
+        
+      } catch (error) {
+        return ResponseErrors.serverError
+        }
+
+    }
+    else return ResponseErrors.incorrectData
+
+
+  }
+  // static async getAllReviewsAboutProduct(productId){
+  //   productId = typeof productId == "string" ?productId : false;
+  //   if(productId){
+  //     try {
+  //       const product = await 
+  //     } catch (error) {
+        
+  //     }
+  //   }
+  //   else return ResponseErrors.incorrectData
+    
+  // }
   static async getAllReviewsByAUser(email, token) {
     email = typeof email == "string" ? email : false;
     token = typeof token == "string" ? token : false;
@@ -74,7 +134,7 @@ module.exports = class Reviews {
     if (email) {
       try {
         if (await _data.get("users", email)) {
-          const reviews = await _data.getAll("reviews", { sellerId: email });
+          const reviews = await _data.getAll("reviews", { seller: email });
           return {
             status: StatusCodes.OK,
             message: reviews,

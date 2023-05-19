@@ -61,7 +61,8 @@ handlers.reviews.post = async (data, callback) => {
     _data.review,
     _data.sellerId,
     _data.userId,
-    token
+    token,
+    _data.rating
   ).post();
   callback(res.status, { data: res.message });
 };
