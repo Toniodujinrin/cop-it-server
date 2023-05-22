@@ -46,7 +46,13 @@ class Images {
       }
     } else return ResponseErrors.incorrectData;
   };
-
+  static deleteImage = async (publicId)=>{
+    try {
+      await cloudinary.uploader.destroy(publicId)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   static uploadUserImage = async (image, email, token) => {
     email = typeof email == "string" ? email : false;
     image = typeof image == "string" ? image : false;
@@ -55,6 +61,9 @@ class Images {
       try {
         const user = await data.get("users", email);
         if (await Token.validate(token, email)) {
+          if(user.imageConfig.publicId){
+            this.deleteImage(user.imageConfig.publicId)
+          }
           const imageConfig = await this.upload("users", image);
           user.imageConfig = imageConfig;
           await data.put("users", email, user);
