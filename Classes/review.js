@@ -130,22 +130,30 @@ module.exports = class Reviews {
         const user = await _data.get("users", email)
         if (user) {
           
-          const reviews = await _data.getAll("reviews", { seller: email });
-          reviews.map(async review =>{
-           const author = await _data.get('users', review.userId)
+          let  reviews = await _data.getAll("reviews", { seller: email });
+          
+          const _reviews = reviews.map(
+            async (review) =>{
+
+           const author = await _data.get('users', review.userId) 
+           
            review.author ={
             firstName:author.firstName,
             lastName:author.lastName,
             imageConfig:author.imageConfig
+           
 
-          }
-          })
+          }})
+          
+          await Promise.all(_reviews)
+         
           return {
             status: StatusCodes.OK,
             message: reviews,
           };
         } else return ResponseErrors.userNotFound;
       } catch (error) {
+        console.log(error)
         return ResponseErrors.serverError;
       }
     } else return ResponseErrors.incorrectData;
