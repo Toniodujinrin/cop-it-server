@@ -103,27 +103,44 @@ class Basket {
                   basket.items.unshift({ product: product, amount: amount });
                 }
 
-                await data.put("baskets", email, basket);
-                return {
-                  status: StatusCodes.OK,
-                  message: "item added to basket",
-                };
-              } else {
-                const _basket = {
-                  _id: email,
-                  items: [
-                    {
-                      product: product,
-                      amount: amount,
-                    },
-                  ],
-                };
+                
+                if(basket.items.find(item => item.product._id===productId).amount <= product.numberInStock){
+                  await data.put("baskets", email, basket);
+                  return {
+                    status: StatusCodes.OK,
+                    message: "item added to basket",
+                  };
+                }
+                else return {
+                  status:StatusCodes.BAD_REQUEST,
+                  message:'amount to large for supply'
+                }
 
-                await data.post("baskets", _basket);
-                return {
-                  status: StatusCodes.OK,
-                  message: "item added tp basket",
-                };
+              
+              } else {
+                if(amount <= product.numberInStock){
+                  const _basket = {
+                    _id: email,
+                    items: [
+                      {
+                        product: product,
+                        amount: amount,
+                      },
+                    ],
+                  };
+  
+                  await data.post("baskets", _basket);
+                  return {
+                    status: StatusCodes.OK,
+                    message: "item added tp basket",
+                  };
+                }
+                else return {
+
+                  status:StatusCodes.BAD_REQUEST,
+                  message:'amount to large for supply'
+                }
+              
               }
             } else return ResponseErrors.productNotFound;
           } else return ResponseErrors.invalidToken;
