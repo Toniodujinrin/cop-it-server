@@ -50,7 +50,7 @@ class Images {
     try {
       await cloudinary.uploader.destroy(publicId)
     } catch (error) {
-      console.log(error)
+      console.log('cloudinary',error)
     }
   }
   static uploadUserImage = async (image, email, token) => {
@@ -62,7 +62,7 @@ class Images {
         const user = await data.get("users", email);
         if (await Token.validate(token, email)) {
           if(user.imageConfig.publicId){
-            this.deleteImage(user.imageConfig.publicId)
+            await this.deleteImage(user.imageConfig.publicId)
           }
           const imageConfig = await this.upload("users", image);
           user.imageConfig = imageConfig;

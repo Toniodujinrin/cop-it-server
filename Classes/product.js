@@ -109,14 +109,27 @@ module.exports = class Product {
     productId = typeof productId == "string" ? productId : false;
     if (productId) {
       try {
-        if (await data.get("products", productId)) {
+        const product = await data.get('products', productId)
+        if (product) {
           await data.delete("products", productId);
+          await Image.deleteImage(product.imageConfig[0].publicId)
+          const baskets = await data.getAll('baskets',{})
+          console.log(baskets)
+          baskets.forEach(basket =>{
+           
+            const newBasket = basket.items.filter(item => item.product._id !== productId )
+           
+            basket.items = newBasket
+            data.put('baskets',basket._id,basket)
+
+          })
           return {
             status: 200,
             message: "Product Deleted ",
           };
         } else return ResponseErrors.productNotFound;
       } catch (error) {
+        console.log(error)
         return ResponseErrors.serverError;
       }
     } else return ResponseErrors.incorrectData;

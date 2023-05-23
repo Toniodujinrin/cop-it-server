@@ -29,12 +29,6 @@ module.exports = class Reviews {
                 review: this.review,
                 userId: this.userId,
                 rating: this.rating,
-                author: {
-                  
-                  firstName: user.firstName,
-                  lastName: user.lastName,
-                  imageConfig: user.imageConfig,
-                },
                 datePosted: Date.now(),
                 seller: this.sellerId,
               };
@@ -133,8 +127,19 @@ module.exports = class Reviews {
     email = typeof email == "string" ? email : false;
     if (email) {
       try {
-        if (await _data.get("users", email)) {
+        const user = await _data.get("users", email)
+        if (user) {
+          
           const reviews = await _data.getAll("reviews", { seller: email });
+          reviews.map(async review =>{
+           const author = await _data.get('users', review.userId)
+           review.author ={
+            firstName:author.firstName,
+            lastName:author.lastName,
+            imageConfig:author.imageConfig
+
+          }
+          })
           return {
             status: StatusCodes.OK,
             message: reviews,
