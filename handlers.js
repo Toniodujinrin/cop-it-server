@@ -71,6 +71,12 @@ handlers.getAllReviewsAboutUser.get = async (data, callback) => {
   const res = await Reviews.getAllReviesAboutUser(email);
   callback(res.status, { data: res.message });
 };
+handlers.reviews.delete = async(data,callback)=>{
+  const token = data.headers.token; 
+  const reviewId = data.query.reviewId
+  const res = await Reviews.deletePersonReview(token,reviewId)
+  callback(res.status,{data:res.message})
+}
 handlers.users.post = async (data, callback) => {
   const _data = data.payload;
   const res = await new User(_data.email, _data.password).post();

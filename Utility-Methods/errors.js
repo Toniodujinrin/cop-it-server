@@ -22,6 +22,10 @@ module.exports = class ResponseErrors {
     status: StatusCodes.NOT_FOUND,
     message: "user not found",
   };
+  static reviewNotFound = {
+    status: StatusCodes.NOT_FOUND,
+    message: "review not found",
+  };
   static basketEmpty = {
     status: StatusCodes.NOT_FOUND,
     message: "user does not have a basket",

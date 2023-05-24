@@ -81,4 +81,5 @@ module.exports = function startup(app) {
   gets("users/getUserDetails");
   gets("users/getProfile");
   deletes("products");
+  deletes('reviews')
 };

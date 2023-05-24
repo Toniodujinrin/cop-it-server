@@ -33,7 +33,7 @@ module.exports = class Reviews {
                 seller: this.sellerId,
               };
 
-              _data.post("reviews", review);
+              await _data.post("reviews", review);
               return { status: StatusCodes.OK, message: "review created " };
             }
           } else return ResponseErrors.invalidToken;
@@ -44,6 +44,30 @@ module.exports = class Reviews {
         return ResponseErrors.serverError;
       }
     } else return ResponseErrors.incorrectData;
+  }
+
+  static async deletePersonReview(token, reviewId){
+    token = typeof token =='string'?token:false 
+    
+    reviewId = typeof reviewId  =='string'?reviewId:false 
+
+    if(token && reviewId){
+     const _review = await _data.get('reviews', reviewId)
+     if(_review){
+        if(await Token.validate(token, _review.userId)){
+          await _data.delete('reviews',reviewId)
+          return{
+            status:StatusCodes.OK,
+            message:'review deleted'
+          }
+        }
+        else return ResponseErrors.invalidToken
+     }
+     else return ResponseErrors.reviewNotFound
+
+    }
+    else return ResponseErrors.incorrectData
+  
   }
 
   static async reviewProduct(productId,email,token, review, rating){

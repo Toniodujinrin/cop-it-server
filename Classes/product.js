@@ -134,4 +134,6 @@ module.exports = class Product {
       }
     } else return ResponseErrors.incorrectData;
   }
+
+  
 };
