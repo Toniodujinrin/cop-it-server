@@ -4,6 +4,7 @@ const Data = require("../Utility-Methods/http");
 const ResponseErrors = require("../Utility-Methods/errors");
 const Token = require("./token");
 const Image = require("./images");
+const { StatusCodes } = require("http-status-codes");
 
 const service = new Service();
 const data = new Data();
@@ -133,6 +134,22 @@ module.exports = class Product {
         return ResponseErrors.serverError;
       }
     } else return ResponseErrors.incorrectData;
+  }
+
+  static async getFeatured(){
+    try {
+      const products = await data.getAll('products',{})
+      console.log(products)
+      return {
+        status:StatusCodes.OK,
+        message:products.slice(0,9)
+      }
+
+    } catch (error) {
+      console.log(error)
+      return ResponseErrors.serverError
+      
+    }
   }
 
   

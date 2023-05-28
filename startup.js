@@ -60,7 +60,6 @@ module.exports = function startup(app) {
     });
   };
   posts("products");
-  gets("products");
   posts("reviews");
   posts("users");
   posts("users/verifyEmail");
@@ -75,6 +74,8 @@ module.exports = function startup(app) {
   posts("basket/removeItem");
   gets("auth/checkVerified");
   gets("users");
+  gets("products");
+  gets('products/getFeatured')
   gets("reviews/getAllReviewsAboutUser");
   gets("basket/getBasket");
   gets("users/getAllProductsBeingSoldByUser");

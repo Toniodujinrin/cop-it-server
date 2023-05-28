@@ -25,6 +25,7 @@ handlers.getProfile = {};
 handlers.getAllReviewsAboutUser = {};
 handlers.removeItem = {};
 handlers.googleAuthiticate ={}
+handlers.getFeatured = {}
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -53,6 +54,10 @@ handlers.products.delete = async (data, callback) => {
   const res = await Product.delete(productId);
   callback(res.status, { data: res.message });
 };
+handlers.getFeatured.get = async (data,callback)=>{
+  const res = await Product.getFeatured();
+  callback(res.status,{data:res.message})
+}
 
 handlers.reviews.post = async (data, callback) => {
   const _data = data.payload;
