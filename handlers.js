@@ -26,6 +26,9 @@ handlers.getAllReviewsAboutUser = {};
 handlers.removeItem = {};
 handlers.googleAuthiticate ={}
 handlers.getFeatured = {}
+handlers.getByCategory = {}
+handlers.getByName = {}
+handlers.searchUser = {}
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -56,6 +59,16 @@ handlers.products.delete = async (data, callback) => {
 };
 handlers.getFeatured.get = async (data,callback)=>{
   const res = await Product.getFeatured();
+  callback(res.status,{data:res.message})
+}
+handlers.getByCategory.get = async (data,callback)=>{
+  const category = data.query.category
+  const res = await Product.getByCategory(category)
+  callback(res.status,{data:res.message})
+}
+handlers.getByName.get = async (data,callback)=>{
+  const name = data.query.name
+  const res = await Product.getByName(name)
   callback(res.status,{data:res.message})
 }
 
@@ -99,6 +112,11 @@ handlers.getProfile.get = async (data, callback) => {
   const res = await User.getProfile(email);
   callback(res.status, { data: res.message });
 };
+handlers.searchUser.get = async (data,callback)=>{
+  const searchString = data.query.searchString
+  const res = await User.searchProfiles(searchString)
+  callback(res.status,{data:res.message})
+}
 
 handlers.verifyEmail.post = async (data, callback) => {
   const _data = data.payload;

@@ -152,5 +152,44 @@ module.exports = class Product {
     }
   }
 
+  static async getByCategory(category){
+    category = typeof category =='string'?category:false
+    if(category){
+      try {
+      const products = await data.getAll('products',{category:category})
+      console.log(products)
+      return{
+        status:StatusCodes.OK,
+        message:products
+      }
+      
+    } catch (error) {
+      console.log(error)
+      return ResponseErrors.serverError
+    }
+    }
+    else return ResponseErrors.incorrectData    
+  }
+
+  static async getByName(name){
+  name = typeof name == 'string'?name:false
+  if(name){
+    try {
+         let products = await data.getAll('products',{})
+    products = products.filter(product => product.name.toLowerCase().includes(name.toLowerCase()))
+    return {
+      status:StatusCodes.OK,
+      message:products
+    }
+    } catch (error) {
+      console.log(error)
+      return ResponseErrors.serverError
+    }
+ 
+  }
+  else return ResponseErrors.incorrectData
+}
+
+
   
 };

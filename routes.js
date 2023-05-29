@@ -7,6 +7,7 @@ const routes = {
   "users/verifyEmail": handlers.verifyEmail,
   auth: handlers.auth,
   "users/verifyAccount": handlers.verifyAccount,
+  'users/searchUser':handlers.searchUser,
   "auth/checkVerified": handlers.checkVerified,
   "users/getUserDetails": handlers.getUserDetails,
   "basket/getBasket": handlers.getBasket,
@@ -20,7 +21,9 @@ const routes = {
   "reviews/getAllReviewsAboutUser": handlers.getAllReviewsAboutUser,
   "basket/removeItem": handlers.removeItem,
   'auth/googleAuthenticate':handlers.googleAuthiticate,
-  'products/getFeatured':handlers.getFeatured
+  'products/getFeatured':handlers.getFeatured,
+  'products/getByCategory':handlers.getByCategory,
+  'products/getByName':handlers.getByName
 };
 
 module.exports = routes;

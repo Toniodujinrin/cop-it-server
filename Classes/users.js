@@ -171,6 +171,35 @@ module.exports = class User {
       } else return ResponseErrors.userNotFound;
     } else return ResponseErrors.incorrectData;
   }
+  static async searchProfiles(searchString){
+    searchString = typeof searchString == 'string'?searchString:false
+    if(searchString){
+      searchString = searchString.toLowerCase()
+      try {
+        
+   
+      let  users = await data.getAll('users',{})
+      users = users.filter(user =>{
+        if(user.accountVerified && user.emailVerified){
+          return( user.email.toLowerCase().includes(searchString) || user.firstName.toLowerCase().includes(searchString)|| user.lastName.toLowerCase().includes(searchString))
+        }
+       
+      }
+      )
+         
+      return{
+        status:StatusCodes.OK, 
+        message:users
+
+      }
+       } catch (error) {
+        console.log(error)
+        return ResponseErrors.serverError
+        
+      }
+    }
+    else return ResponseErrors.incorrectData
+  }
 
   static async getProfile(email) {
     email = typeof email == "string" && email.length > 0 ? email : false;
