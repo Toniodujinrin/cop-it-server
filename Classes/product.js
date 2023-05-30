@@ -176,7 +176,7 @@ module.exports = class Product {
   if(name){
     try {
          let products = await data.getAll('products',{})
-    products = products.filter(product => product.name.toLowerCase().includes(name.toLowerCase()))
+    products = products.filter(product => product.name.toLowerCase().includes(name.toLowerCase()) || product.description.toLowerCase().includes(name.toLowerCase()) || product.category.toLowerCase().includes(name.toLowerCase()))
     return {
       status:StatusCodes.OK,
       message:products
