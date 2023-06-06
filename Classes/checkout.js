@@ -28,7 +28,7 @@ class Checkout{
             })
             const checkoutData = {
                 _id : this.email,
-                procucts: this.products,
+                products: this.products,
                 total:total,
                 items:items
             }
