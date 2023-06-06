@@ -29,7 +29,8 @@ class Checkout{
             const checkoutData = {
                 _id : this.email,
                 procucts: this.products,
-                total:total 
+                total:total,
+                items:items
             }
            await data.post('checkout', checkoutData)
       
