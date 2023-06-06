@@ -240,5 +240,12 @@ handlers.checkout.post = async(data, callback)=>{
   callback(res.status,{data:res.message})
 
 }
+handlers.checkout.get = async (data,callback)=>{
+  const email = data.query.email
+  const token = data.headers.token
+  const res = await  Checkout.get(token,email)
+  callback(res.status, {data:res.message})
+
+}
 
 module.exports = handlers;

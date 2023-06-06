@@ -77,6 +77,7 @@ module.exports = function startup(app) {
   gets("auth/checkVerified");
   gets("users");
   gets("products");
+  gets('checkout')
   gets('products/getFeatured')
   gets('products/getByCategory')
   gets('products/getByName')

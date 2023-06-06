@@ -17,8 +17,9 @@ class Checkout{
                 
             
           if(await Token.validate(this.token, this.email)){
-            
-            
+            if(await data.get('checkout',this.email)){
+                await data.delete('checkout',this.email)
+            }
             let total = 0
             this.products.forEach(product =>{
                 total += product.amount*product.product.price
@@ -29,7 +30,7 @@ class Checkout{
                 total:total 
             }
            await data.post('checkout', checkoutData)
-           console.log(checkoutData)
+      
            return({status:StatusCodes.CREATED,message:'checkout created'})
           }
           else return ResponseErrors.invalidToken
@@ -42,6 +43,26 @@ class Checkout{
         else return ResponseErrors.incorrectData
 
     }
+    static async get(token, email){
+        token = typeof token =='string'?token :false 
+        email = typeof email == 'string'?email :false 
+        if(token && email){
+            if(await Token.validate(token,email)){
+              const checkout = await data.get('checkout', email)
+              return {
+                status:StatusCodes.OK,
+                message:checkout
+              }
+            }
+            else return ResponseErrors.invalidToken
+        }
+        else return ResponseErrors.incorrectData
+        
+    }
+
+
 }
+
+
 
 module.exports = Checkout
