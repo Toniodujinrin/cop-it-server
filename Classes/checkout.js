@@ -19,9 +19,9 @@ class Checkout{
           if(await Token.validate(this.token, this.email)){
             
             
-            total = 0
+            let total = 0
             this.products.forEach(product =>{
-                total += product.amount
+                total += product.amount*product.product.price
             })
             const checkoutData = {
                 _id : this.email,
@@ -34,8 +34,9 @@ class Checkout{
           }
           else return ResponseErrors.invalidToken
         } catch (error) {
+            console.log(error)
             return ResponseErrors.serverError
-                
+           
         }
         }
         else return ResponseErrors.incorrectData
