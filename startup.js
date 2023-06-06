@@ -59,6 +59,7 @@ module.exports = function startup(app) {
       res.end();
     });
   };
+  
   posts("products");
   posts("reviews");
   posts("users");
@@ -72,6 +73,7 @@ module.exports = function startup(app) {
   posts("basket/editItemAmount");
   posts("auth/sendEmailCode");
   posts("basket/removeItem");
+  posts('checkout')
   gets("auth/checkVerified");
   gets("users");
   gets("products");

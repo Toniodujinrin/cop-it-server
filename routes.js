@@ -23,7 +23,8 @@ const routes = {
   'auth/googleAuthenticate':handlers.googleAuthiticate,
   'products/getFeatured':handlers.getFeatured,
   'products/getByCategory':handlers.getByCategory,
-  'products/getByName':handlers.getByName
+  'products/getByName':handlers.getByName,
+  'checkout':handlers.checkout
 };
 
 module.exports = routes;

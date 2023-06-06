@@ -5,6 +5,7 @@ const Reviews = require("./Classes/review");
 const User = require("./Classes/users");
 const Basket = require("./Classes/basket");
 const Image = require("./Classes/images");
+const Checkout = require("./Classes/checkout");
 
 handlers.products = {};
 handlers.reviews = {};
@@ -29,6 +30,7 @@ handlers.getFeatured = {}
 handlers.getByCategory = {}
 handlers.getByName = {}
 handlers.searchUser = {}
+handlers.checkout = {}
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -230,5 +232,13 @@ handlers.uploadUserImage.post = async (data, callback) => {
   const res = await Image.uploadUserImage(image, email, token);
   callback(res.status, { data: res.message });
 };
+
+handlers.checkout.post = async(data, callback)=>{
+  const _data = data.payload
+  const token = data.headers.token
+  const res = await new Checkout(_data.products,token,_data.email).post()
+  callback(res.status,{data:res.message})
+
+}
 
 module.exports = handlers;
