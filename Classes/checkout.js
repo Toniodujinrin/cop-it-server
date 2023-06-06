@@ -21,7 +21,9 @@ class Checkout{
                 await data.delete('checkout',this.email)
             }
             let total = 0
+            let items = 0
             this.products.forEach(product =>{
+                items += product.amount
                 total += product.amount*product.product.price
             })
             const checkoutData = {
@@ -49,10 +51,14 @@ class Checkout{
         if(token && email){
             if(await Token.validate(token,email)){
               const checkout = await data.get('checkout', email)
-              return {
+              if(checkout){
+                 return {
                 status:StatusCodes.OK,
                 message:checkout
               }
+              }
+              else return ResponseErrors.checkoutNotFound
+             
             }
             else return ResponseErrors.invalidToken
         }

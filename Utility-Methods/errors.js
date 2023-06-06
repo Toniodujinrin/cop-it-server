@@ -30,4 +30,9 @@ module.exports = class ResponseErrors {
     status: StatusCodes.NOT_FOUND,
     message: "user does not have a basket",
   };
+  static checkoutNotFound = {
+    status: StatusCodes.NOT_FOUND,
+    message: "checkout not found",
+  };
+  
 };
