@@ -31,6 +31,7 @@ handlers.getByCategory = {}
 handlers.getByName = {}
 handlers.searchUser = {}
 handlers.checkout = {}
+handlers.guestCheckout = {}
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -246,6 +247,18 @@ handlers.checkout.get = async (data,callback)=>{
   const res = await  Checkout.get(token,email)
   callback(res.status, {data:res.message})
 
+}
+
+handlers.guestCheckout.post = async (data,callback)=>{
+  const products = data.payload.products
+  const res = await Checkout.guestCheckout(products)
+  callback(res.status,{data:res.message})
+}
+
+handlers.guestCheckout.get = async(data,callback)=>{
+  const checkoutId = data.query.checkoutId
+  const res = await Checkout.getGuestCheckout(checkoutId)
+  callback(res.status,{data:res.message})
 }
 
 module.exports = handlers;

@@ -2,6 +2,8 @@ const ResponseErrors = require('../Utility-Methods/errors')
 const Token = require('./token')
 const Data = require('../Utility-Methods/http')
 const { StatusCodes } = require('http-status-codes')
+const Services = require('../services')
+const service = new Services()
 const data = new Data()
 class Checkout{
     
@@ -45,6 +47,59 @@ class Checkout{
         }
         else return ResponseErrors.incorrectData
 
+    }
+    static async guestCheckout(products){
+        products = typeof products == 'object' && products instanceof Array? products: false
+        if(products){
+            try {
+                
+           
+            let total = 0
+            let items = 0 
+          products.forEach(product =>{
+            items += product.amount
+            total += product.amount*product.product.price
+
+          })
+          const checkoutId = service.createRandomString(20)
+          const checkoutData = {
+            _id : checkoutId ,
+            products: products,
+            total:total,
+            items:items,
+            expiry:Date.now()+24 * 60 * 60 * 1000
+        }
+
+           await data.post('guest-checkout',checkoutData)
+           return{
+            status:StatusCodes.CREATED,
+            message:{checkoutId:checkoutId}
+           }
+         } catch (error) {
+                 return ResponseErrors.serverError
+            }
+        }
+        else return ResponseErrors.incorrectData
+        
+    }
+
+    static async getGuestCheckout(checkoutId){
+        checkoutId= typeof checkoutId == 'string'?checkoutId:false
+        if(checkoutId){
+           try {
+            const checkout = await data.get('guest-checkout',checkoutId)
+            if(checkout){
+                return{
+                    status:StatusCodes.OK,
+                    message:checkout
+                }
+            }
+            else return ResponseErrors.checkoutNotFound
+           } catch (error) {
+            return ResponseErrors.serverError
+           }
+        }
+        else return ResponseErrors.incorrectData
     }
     static async get(token, email){
         token = typeof token =='string'?token :false 

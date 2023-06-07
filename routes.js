@@ -24,7 +24,8 @@ const routes = {
   'products/getFeatured':handlers.getFeatured,
   'products/getByCategory':handlers.getByCategory,
   'products/getByName':handlers.getByName,
-  'checkout':handlers.checkout
+  'checkout':handlers.checkout,
+  'guestCheckout':handlers.guestCheckout
 };
 
 module.exports = routes;

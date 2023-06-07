@@ -74,6 +74,8 @@ module.exports = function startup(app) {
   posts("auth/sendEmailCode");
   posts("basket/removeItem");
   posts('checkout')
+  posts('guestCheckout')
+  gets('guestCheckout')
   gets("auth/checkVerified");
   gets("users");
   gets("products");

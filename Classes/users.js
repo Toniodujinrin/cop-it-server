@@ -134,6 +134,8 @@ module.exports = class User {
     } else return ResponseErrors.incorrectData;
   }
 
+
+
   static async getUserDetails(email, token) {
     email = typeof email == "string" ? email : false;
     token = typeof token == "string" ? token : false;
