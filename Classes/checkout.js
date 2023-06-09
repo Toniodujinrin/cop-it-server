@@ -120,14 +120,14 @@ class Checkout{
         
     }
 
-    static async processCheckout (checkout, email, token){
-        checkout = typeof()=='string'?productId:false
-        email = typeof(email)=='string'?email:false
-        token = typeof(token)=='string'?token:false 
+    // static async processCheckout (checkout, email, token){
+    //     checkout = typeof()=='string'?productId:false
+    //     email = typeof(email)=='string'?email:false
+    //     token = typeof(token)=='string'?token:false 
         
 
       
-    }
+    // }
 }
 
 
