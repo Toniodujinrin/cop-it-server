@@ -2,12 +2,11 @@ const Data = require("../Utility-Methods/http");
 const Token = require("./token");
 const ResponseErrors = require("../Utility-Methods/errors");
 const { StatusCodes } = require("http-status-codes");
+const Validator = require('../Utility-Methods/validator')
 const data = new Data();
 class Basket {
   static async getBasket(email, token) {
-    email = typeof email == "string" && email.length > 0 ? email : false;
-    token = typeof token == "string" && token.length > 0 ? token : false;
-    if (token && email) {
+    if (Validator.stringValidate([email,token])) {
       const user = await data.get("users", email);
       if (user && (await Token.validate(token, email))) {
         const basket = await data.get("baskets", email);
@@ -27,13 +26,7 @@ class Basket {
   }
 
   static async editItemAmount(email, productId, amount, token) {
-    email = typeof email == "string" && email.length > 0 ? email : false;
-    productId =
-      typeof productId == "string" && productId.length > 0 ? productId : false;
-    amount = typeof amount == "number" || amount === 0 ? amount : false;
-    token = typeof token == "string" && token.length > 0 ? token : false;
-
-    if (email && productId && token) {
+    if (Validator.stringValidate([token,email,productId])) {
       try {
         const user = await data.get("users", email);
         if (user) {
@@ -80,13 +73,7 @@ class Basket {
     } else return ResponseErrors.incorrectData;
   }
   static async addItem(email, productId, amount, token) {
-    email = typeof email == "string" && email.length > 0 ? email : false;
-    productId =
-      typeof productId == "string" && productId.length > 0 ? productId : false;
-    amount = typeof amount == "number" ? amount : false;
-    token = typeof token == "string" && token.length > 0 ? token : false;
-
-    if (email && productId && amount && token) {
+    if (Validator.stringValidate([email,productId,token])&&Validator.numberValidator([amount])) {
       try {
         const user = await data.get("users", email);
         if (user) {
@@ -158,13 +145,7 @@ class Basket {
   }
 
   static async removeItem(productId, token, email) {
-    email = typeof email == "string" && email.length > 0 ? email : false;
-    productId =
-      typeof productId == "string" && productId.length > 0 ? productId : false;
-
-    token = typeof token == "string" && token.length > 0 ? token : false;
-
-    if ((email, productId, token)) {
+    if (Validator.stringValidate([email, productId, token])) {
       try {
         if (await Token.validate(token, email)) {
           const basket = await data.get("baskets", email);

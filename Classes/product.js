@@ -4,6 +4,7 @@ const Data = require("../Utility-Methods/http");
 const ResponseErrors = require("../Utility-Methods/errors");
 const Token = require("./token");
 const Image = require("./images");
+const Validator = require('../Utility-Methods/validator')
 const { StatusCodes } = require("http-status-codes");
 
 const service = new Service();
@@ -18,40 +19,22 @@ module.exports = class Product {
     description,
     price,
     numberInStock,
-
     token
   ) {
-    this.name = typeof name == "string" && name.length > 0 ? name : false;
-    this.category =
-      typeof category == "string" && category.length > 0 ? category : false;
+    this.name = name;
+    this.category= category;
     this.rating = 0;
-    this.description =
-      typeof description == "string" && description.length > 0
-        ? description
-        : false;
+    this.description= description
     this.isAvailable = true;
-    this.price = typeof price == "number" && price > 0 ? price : false;
-    this.numberInStock =
-      typeof numberInStock == "number" ? numberInStock : false;
-
-    this.sellerId =
-      typeof email == "string" && email.length > 0 ? email : false;
-    this.email = typeof email == "string" && email.length > 0 ? email : false;
-    this.token = typeof token == "string" && token.length > 0 ? token : false;
+    this.price = price
+    this.numberInStock = numberInStock
+    this.sellerId = email
+    this.email = email
+    this.token = token
   }
 
   async post() {
-    if (
-      this.category &&
-      this.name &&
-      this.description &&
-      this.isAvailable &&
-      this.price &&
-      this.numberInStock &&
-      this.sellerId &&
-      this.email &&
-      this.token
-    ) {
+    if (Validator.stringValidate([this.email,this.category, this.description, this.sellerId, this.token, this.name]) && Validator.numberValidator([this.price,this.numberInStock])) {
       const user = await data.get("users", this.email);
 
       if (user) {
@@ -69,7 +52,7 @@ module.exports = class Product {
             sellerId: this.sellerId,
           };
           try {
-            const res = await data.post("products", product);
+            await data.post("products", product);
             return {
               status: statusCodes.CREATED,
               message: {
@@ -88,14 +71,12 @@ module.exports = class Product {
   }
 
   async get(productId) {
-    productId = typeof productId == "string" ? productId : false;
-
-    if (productId) {
+    if (Validator.stringValidate([productId])) {
       try {
         const product = await data.get("products", productId);
 
         if (product) {
-          console.log(product);
+         
           return {
             status: statusCodes.OK,
             message: product,
@@ -107,15 +88,13 @@ module.exports = class Product {
     } else return ResponseErrors.incorrectData;
   }
   static async delete(productId) {
-    productId = typeof productId == "string" ? productId : false;
-    if (productId) {
+    if (Validator.stringValidate([productId])) {
       try {
         const product = await data.get('products', productId)
         if (product) {
           await data.delete("products", productId);
           await Image.deleteImage(product.imageConfig[0].publicId)
           const baskets = await data.getAll('baskets',{})
-          console.log(baskets)
           baskets.forEach(basket =>{
            
             const newBasket = basket.items.filter(item => item.product._id !== productId )
@@ -153,11 +132,10 @@ module.exports = class Product {
   }
 
   static async getByCategory(category){
-    category = typeof category =='string'?category:false
-    if(category){
+    if(Validator.stringValidate([category])){
       try {
       const products = await data.getAll('products',{category:category})
-      console.log(products)
+      
       return{
         status:StatusCodes.OK,
         message:products
@@ -172,8 +150,7 @@ module.exports = class Product {
   }
 
   static async getByName(name){
-  name = typeof name == 'string'?name:false
-  if(name){
+  if(Validator.stringValidate([name])){
     try {
          let products = await data.getAll('products',{})
     products = products.filter(product => product.name.toLowerCase().includes(name.toLowerCase()) || product.description.toLowerCase().includes(name.toLowerCase()) || product.category.toLowerCase().includes(name.toLowerCase()))

@@ -3,19 +3,18 @@ const Data = require("../Utility-Methods/http");
 const { StatusCodes } = require("http-status-codes");
 const Services = require("../services");
 const ResponseErrors = require("../Utility-Methods/errors");
-
+const Validator = require('../Utility-Methods/validator')
 const data = new Data();
 const service = new Services();
 
 module.exports = class Auth {
   constructor(user, password) {
-    this.user = typeof user == "string" && user.length > 0 ? user : false;
-    this.password =
-      typeof password == "string" && password.length > 0 ? password : false;
+    this.user = user
+    this.password = password
   }
 
   async authorize() {
-    if ((this.user, this.password)) {
+    if (Validator.stringValidate([this.user, this.password])) {
       try {
         const res = await data.get("users", this.user);
         const hashedPassword = service.stringHasher(this.password);
@@ -30,18 +29,18 @@ module.exports = class Auth {
           };
         }
       } catch (error) {
-        console.log(error);
+        
         return {
           status: StatusCodes.INTERNAL_SERVER_ERROR,
           message: "could not create token",
         };
       }
     }
+    else return ResponseErrors.incorrectData
   }
 
   static async googleAuthenticate(email){
-  email = typeof email == "string" ? email : false;
-  if(email){
+  if(Validator.stringValidate([email])){
     try {
 
       const user = await data.get('users',email)
@@ -64,9 +63,7 @@ module.exports = class Auth {
   }
 
   static checkVerified = async (email, token) => {
-    token = typeof token == "string" ? token : false;
-    email = typeof email == "string" ? email : false;
-    if (email && token) {
+    if (Validator.stringValidate([email,token])) {
       try {
         const user = await data.get("users", email);
         if (user) {
@@ -103,8 +100,7 @@ module.exports = class Auth {
   };
 
   static sendEmailCode = async (email) => {
-    email = typeof email == "string" ? email : false;
-    if (email) {
+    if (Validator.stringValidate([email])) {
       try {
         const user = await data.get("users", email);
         if (user) {

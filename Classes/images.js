@@ -2,7 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const ResponseErrors = require("../Utility-Methods/errors");
 const Data = require("../Utility-Methods/http");
 const Token = require("./token");
-
+const Validator = require('../Utility-Methods/validator')
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 cloudinary.config({
@@ -26,9 +26,7 @@ class Images {
   };
 
   static uploadProductImage = async (image, productId) => {
-    productId = typeof productId == "string" ? productId : false;
-    image = typeof image == "string" ? image : false;
-    if (productId && image) {
+    if (Validator.stringValidate([productId, image])) {
       try {
         const product = await data.get("products", productId);
         if (product) {
@@ -54,13 +52,11 @@ class Images {
     }
   }
   static uploadUserImage = async (image, email, token) => {
-    email = typeof email == "string" ? email : false;
-    image = typeof image == "string" ? image : false;
-    console.log(image, token, email);
-    if (email && image) {
+    if (Validator.stringValidate([email,image])) {
       try {
-        const user = await data.get("users", email);
+        
         if (await Token.validate(token, email)) {
+          const user = await data.get("users", email);
           if(user.imageConfig.publicId){
             await this.deleteImage(user.imageConfig.publicId)
           }

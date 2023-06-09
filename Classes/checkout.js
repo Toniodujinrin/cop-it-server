@@ -3,18 +3,19 @@ const Token = require('./token')
 const Data = require('../Utility-Methods/http')
 const { StatusCodes } = require('http-status-codes')
 const Services = require('../services')
+const Validator = require('../Utility-Methods/validator')
 const service = new Services()
 const data = new Data()
 class Checkout{
     
     constructor(products,token ,email){
-        this.email = typeof email == 'string'?email:false 
-        this.token = typeof token == 'string'?token:false
+        this.email = email
+        this.token = token
         this.products = typeof products == 'object' && products instanceof Array? products: false
     }
 
     async post(){
-        if(this.email&&this.products&&this.token){
+        if(this.products&&Validator.stringValidate([this.token,this.email])){
             try {
                 
             
@@ -84,8 +85,7 @@ class Checkout{
     }
 
     static async getGuestCheckout(checkoutId){
-        checkoutId= typeof checkoutId == 'string'?checkoutId:false
-        if(checkoutId){
+        if(Validator.stringValidate([checkoutId])){
            try {
             const checkout = await data.get('guest-checkout',checkoutId)
             if(checkout){
@@ -102,9 +102,7 @@ class Checkout{
         else return ResponseErrors.incorrectData
     }
     static async get(token, email){
-        token = typeof token =='string'?token :false 
-        email = typeof email == 'string'?email :false 
-        if(token && email){
+        if(Validator.stringValidate([token,email])){
             if(await Token.validate(token,email)){
               const checkout = await data.get('checkout', email)
               if(checkout){
@@ -122,7 +120,14 @@ class Checkout{
         
     }
 
+    static async processCheckout (checkout, email, token){
+        checkout = typeof()=='string'?productId:false
+        email = typeof(email)=='string'?email:false
+        token = typeof(token)=='string'?token:false 
+        
 
+      
+    }
 }
 
 
