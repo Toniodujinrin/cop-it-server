@@ -6,6 +6,7 @@ const data = new Data();
 const Token = require("./token");
 const ResponseErrors = require("../Utility-Methods/errors");
 const { invalidToken } = require("../Utility-Methods/errors");
+const Validator = require("../Utility-Methods/validator");
 
 module.exports = class User {
   constructor(email, password) {
@@ -26,8 +27,7 @@ module.exports = class User {
         imageConfig: {},
       };
       try {
-        const res = await data.post("users", user);
-
+        await data.post("users", user);
         service.emailCodeSender(user.email, 5, (code) => {
           const codeObject = {
             _id: code,
@@ -53,10 +53,8 @@ module.exports = class User {
     } else return ResponseErrors.incorrectData;
   }
   static async get(email, token) {
-    email = typeof email == "string" ? email : false;
-    token = typeof token == "string" ? token : false;
-    if (email && token) {
-      if (await Token.validate(token, email)) {
+     if (Validator.stringValidate([email,token])) {
+      if (await Token.onlyTokenValidate(token, email)) {
         const user = await data.get("users", email);
         if (user) {
           return {
@@ -76,23 +74,14 @@ module.exports = class User {
     phone,
     address
   ) {
-    firstName =
-      typeof firstName == "string" && firstName.length > 0 ? firstName : false;
-    lastName =
-      typeof lastName == "string" && lastName.length > 0 ? lastName : false;
-    phone = typeof phone == "string" ? phone : false;
-    address = typeof address == "string" ? address : false;
-    email = typeof email == "string" ? email : false;
-    token = typeof token == "string" ? token : false;
-
-    if (email && firstName && lastName && phone && address) {
+    if(Validator.stringValidate([email,token,firstName,lastName,phone,address])) {
       try {
         const res = await data.get("users", email);
 
         if (res) {
-          const isValid = await Token.validate(token, email);
-          console.log(isValid);
-          if (isValid) {
+          
+          
+          if (await Token.onlyTokenValidate(token, email)) {
             res.accountVerified = true;
             res.firstName = firstName;
             res.lastName = lastName;
@@ -112,13 +101,10 @@ module.exports = class User {
   }
 
   static async verifyEmail(code, email) {
-    email = typeof email == "string" ? email : false;
-    code = typeof code == "string" ? code : false;
-    if (code && email) {
+    if (Validator.stringValidate([code,email])) {
       try {
         const res = await data.get("codes", code);
-
-        if (res && res.user == email && res.expiry > Date.now()) {
+         if (res && res.user == email && res.expiry > Date.now()) {
           const user = await data.get("users", email);
           if (user) {
             user.emailVerified = true;
@@ -161,11 +147,9 @@ module.exports = class User {
   }
 
   static async getAllProductsBeingSoldByUser(email) {
-    email = typeof email == "string" && email.length > 0 ? email : false;
-    if (email) {
+    if (Validator.stringValidate([email])) {
       if (await data.get("users", email)) {
         const products = await data.getAll("products", { sellerId: email });
-
         return {
           status: StatusCodes.OK,
           message: products,

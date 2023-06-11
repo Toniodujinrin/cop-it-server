@@ -75,6 +75,7 @@ module.exports = function startup(app) {
   posts("basket/removeItem");
   posts('checkout')
   posts('guestCheckout')
+  posts('checkout/processCheckout')
   gets('guestCheckout')
   gets("auth/checkVerified");
   gets("users");

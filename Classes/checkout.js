@@ -120,14 +120,47 @@ class Checkout{
         
     }
 
-    // static async processCheckout (checkout, email, token){
-    //     checkout = typeof()=='string'?productId:false
-    //     email = typeof(email)=='string'?email:false
-    //     token = typeof(token)=='string'?token:false 
+    static async processCheckout (products, email, token){
+        products = typeof products == 'object' && products instanceof Array? products: false
+        if(products && Validator.stringValidate([token,email])){
+            try {
+             if (await Token.validate(token,email)){
+                let order = await data.get('orders', email)
+                if(order){
+                  order = [...order,...products]
+                  await data.put('orders',order)
+                }
+                else{
+                    order = [...products]
+                    await data.post('orders',order)
+                }
+                await data.delete('checkout',email)
+                const basket = await data.get('baskets',email)
+                basket.items = basket.items.filter(product=> !products.includes(product))
+                await data.put('baskets',basket)
+                return{
+                    status:StatusCodes.OK,
+                    message:'Checkout Successfull'
+                }
+
+                }
+                else return ResponseErrors.invalidToken
+            }
+             catch (error) {
+                console.log(error)
+                return ResponseErrors.serverError
+                
+                
+            }
+        }
+        else return ResponseErrors.incorrectData
+
+        
+        
         
 
       
-    // }
+    }
 }
 
 

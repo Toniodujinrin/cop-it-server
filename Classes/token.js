@@ -24,12 +24,19 @@ module.exports = class Token {
     }
   }
 
-  static async validate(token, user) {
+  static async validate(token, email) {
     try {
       const res = await data.get("tokens", token);
 
-      if (res && res.user == user && res.expiry > Date.now()) {
-        return true;
+      if (res && res.user == email && res.expiry > Date.now()) {
+        const user = await data.get('users',email)
+        if(user&& user.emailVerified && user.accountVerified){
+          return true;
+        }
+        else{
+          return false 
+        }
+        
       } else {
         return false;
       }
@@ -37,5 +44,21 @@ module.exports = class Token {
       console.log(error);
       return false
     }
+  }
+
+  static async onlyTokenValidate(token, email){
+    try {
+      const res = await data.get("tokens", token);
+      if (res && res.user == email && res.expiry > Date.now()) {
+        return true 
+        
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+      return false
+
+   }
   }
 };

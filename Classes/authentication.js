@@ -67,7 +67,7 @@ module.exports = class Auth {
       try {
         const user = await data.get("users", email);
         if (user) {
-          const isTokenValid = await Token.validate(token, email);
+          const isTokenValid = await Token.onlyTokenValidate(token, email);
           if (isTokenValid) {
             const returnObject = {
               email: user.email,

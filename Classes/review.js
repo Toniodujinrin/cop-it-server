@@ -2,22 +2,18 @@ const { StatusCodes } = require("http-status-codes");
 const Data = require("../Utility-Methods/http");
 const Services = require("../services");
 const ResponseErrors = require("../Utility-Methods/errors");
+const Validator = require('../Utility-Methods/validator')
 const Token = require("./token");
 const _data = new Data();
 const service = new Services();
 module.exports = class Reviews {
   constructor(review, sellerId, userId, token,rating) {
-    this.review =
-      typeof review == "string" && review.length > 0 ? review : false;
-    this.sellerId =
-      typeof sellerId == "string" && sellerId.length > 0 ? sellerId : false;
-    this.userId = typeof userId == "string" ? userId : false;
-    this.token = token;
-    this.rating = typeof rating =='number'?rating:false 
+ this.rating = rating; this.seller = sellerId; this.userId = userId; this.token=token; 
+ this.review = review
   }
 
   async post() {
-    if (this.review && this.sellerId && this.userId, this.rating) {
+    if (Validator.numberValidator([this.rating])&& Validator.stringValidate([this.sellerId,this.userId, this.review, this.token]) ) {
       try {
         const seller = await _data.get("users", this.sellerId);
         if (seller) {
@@ -71,12 +67,7 @@ module.exports = class Reviews {
   }
 
   static async reviewProduct(productId,email,token, review, rating){
-    review =typeof review == "string" && review.length > 0 ? review : false;
-    rating = typeof rating=='number'?rating:false
-    productId = typeof productId == "string" ?productId : false;
-    token = typeof token =='string'?token:false 
-    email = typeof email =='string'?email:false 
-    if(review,productId,token,email,rating){
+   if(Validator.stringValidate([review,productId,token,email]) && Validator.numberValidator([rating])){
       try {
         const user = await _data.get('users',email)
         if(user){
@@ -128,9 +119,7 @@ module.exports = class Reviews {
     
   // }
   static async getAllReviewsByAUser(email, token) {
-    email = typeof email == "string" ? email : false;
-    token = typeof token == "string" ? token : false;
-    if (email && token) {
+    if (Validator([email,token])) {
       try {
         if (await _data.get("users", email)) {
           if (await Token.validate(token, email)) {
@@ -148,8 +137,7 @@ module.exports = class Reviews {
   }
 
   static async getAllReviesAboutUser(email) {
-    email = typeof email == "string" ? email : false;
-    if (email) {
+    if (Validator.stringValidate([email])) {
       try {
         const user = await _data.get("users", email)
         if (user) {
