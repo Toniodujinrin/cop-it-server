@@ -125,19 +125,30 @@ class Checkout{
         if(products && Validator.stringValidate([token,email])){
             try {
              if (await Token.validate(token,email)){
-                let order = await data.get('orders', email)
-                if(order){
-                  order = [...order,...products]
-                  await data.put('orders',order)
+                const order = 
+                {
+                  orderId:service.createRandomString(20),
+                  products:products
+                }
+                let orders = await data.get('orders', email)
+               
+                if(orders){
+                  orders.orders.unshift(order)
+                  await data.put('orders',email,orders)
                 }
                 else{
-                    order = [...products]
-                    await data.post('orders',order)
+                    orders = {
+                        _id : email,
+                        orders:[order]
+                    }
+                    
+                    await data.post('orders',orders)
                 }
                 await data.delete('checkout',email)
                 const basket = await data.get('baskets',email)
-                basket.items = basket.items.filter(product=> !products.includes(product))
-                await data.put('baskets',basket)
+                basket.items = basket.items.filter(product=> !products.find(_product => _product.product._id == product.product._id))
+               
+                await data.put('baskets',email,basket)
                 return{
                     status:StatusCodes.OK,
                     message:'Checkout Successfull'

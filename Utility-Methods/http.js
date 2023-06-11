@@ -1,8 +1,13 @@
 require("dotenv").config;
 const { MongoClient, FindCursor } = require("mongodb");
 const uri = process.env.MONGO_URI;
+var settings = {
+  reconnectTries : Number.MAX_VALUE,
+  autoReconnect : true
+};
 const client = new MongoClient(uri);
 const db = "copit";
+
 
 module.exports = class Data {
   async post(folder, data) {
