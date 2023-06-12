@@ -8,11 +8,15 @@ const _data = new Data();
 const service = new Services();
 module.exports = class Reviews {
   constructor(review, sellerId, userId, token,rating) {
- this.rating = rating; this.seller = sellerId; this.userId = userId; this.token=token; 
+ this.rating = rating;
+  this.sellerId = sellerId;
+   this.userId = userId;
+  this.token = token; 
  this.review = review
   }
 
   async post() {
+   
     if (Validator.numberValidator([this.rating])&& Validator.stringValidate([this.sellerId,this.userId, this.review, this.token]) ) {
       try {
         const seller = await _data.get("users", this.sellerId);
