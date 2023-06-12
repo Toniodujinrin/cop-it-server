@@ -34,5 +34,10 @@ module.exports = class ResponseErrors {
     status: StatusCodes.NOT_FOUND,
     message: "checkout not found",
   };
+
+  static invalidCheckout = {
+    status:StatusCodes.BAD_REQUEST,
+    message:'Invalid checkout'
+  }
   
 };

@@ -5,7 +5,7 @@ const startup = require("./startup");
 const bodyParser = require("body-parser");
 const Processes = require('./processes')
 const app = express();
-
+Processes.init()
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
   bodyParser.urlencoded({

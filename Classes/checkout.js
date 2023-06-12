@@ -125,34 +125,59 @@ class Checkout{
         if(products && Validator.stringValidate([token,email])){
             try {
              if (await Token.validate(token,email)){
-                const order = 
-                {
-                  orderId:service.createRandomString(20),
-                  products:products
-                }
-                let orders = await data.get('orders', email)
-               
-                if(orders){
-                  orders.orders.unshift(order)
-                  await data.put('orders',email,orders)
-                }
-                else{
-                    orders = {
-                        _id : email,
-                        orders:[order]
+                let checkoutEligible = true 
+                const __products = products.map(async product=>{
+                    const __product = await data.get('products', product.product._id)
+                    if(!__product.isAvailable){
+                     checkoutEligible = false
                     }
-                    
-                    await data.post('orders',orders)
+                    console.log(__product)
+                })
+                await Promise.all(__products)
+                if(checkoutEligible){
+                    const order = 
+                    {
+                      orderId:service.createRandomString(20),
+                      products:products
+                    }
+                    let orders = await data.get('orders', email)
+                   
+                    if(orders){
+                      orders.orders.unshift(order)
+                      await data.put('orders',email,orders)
+                    }
+                    else{
+                        orders = {
+                            _id : email,
+                            orders:[order]
+                        }
+                        
+                        await data.post('orders',orders)
+                    }
+                    await data.delete('checkout',email)
+                    const basket = await data.get('baskets',email)
+                    basket.items = basket.items.filter(product=> !products.find(_product => _product.product._id == product.product._id))
+                   
+                    await data.put('baskets',email,basket)
+    
+                    products.forEach(async product=>{
+                        
+                        const __product = await data.get('products',product.product._id)
+                        __product.numberInStock -= product.amount
+                        if(__product.numberInStock == 0){
+                            __product.isAvailable = false 
+                        }
+                        await data.put('products',__product._id, __product)
+
+                    })
+                    return{
+                        status:StatusCodes.OK,
+                        message:'Checkout Successfull'
+                    }
                 }
-                await data.delete('checkout',email)
-                const basket = await data.get('baskets',email)
-                basket.items = basket.items.filter(product=> !products.find(_product => _product.product._id == product.product._id))
-               
-                await data.put('baskets',email,basket)
-                return{
-                    status:StatusCodes.OK,
-                    message:'Checkout Successfull'
-                }
+                else return ResponseErrors.invalidCheckout
+                
+
 
                 }
                 else return ResponseErrors.invalidToken
