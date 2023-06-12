@@ -6,6 +6,7 @@ const User = require("./Classes/users");
 const Basket = require("./Classes/basket");
 const Image = require("./Classes/images");
 const Checkout = require("./Classes/checkout");
+const Orders = require("./Classes/orders");
 
 handlers.products = {};
 handlers.reviews = {};
@@ -33,6 +34,7 @@ handlers.searchUser = {}
 handlers.checkout = {}
 handlers.guestCheckout = {}
 handlers.processCheckout = {}
+handlers.orders = {}
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -267,6 +269,13 @@ handlers.guestCheckout.get = async(data,callback)=>{
   const checkoutId = data.query.checkoutId
   const res = await Checkout.getGuestCheckout(checkoutId)
   callback(res.status,{data:res.message})
+}
+
+handlers.orders.get = async(data,callback)=>{
+  const email = data.query.email
+  const token = data.headers.token
+  const res = await Orders.get(token,email)
+  callback(res.status, {data:res.message})
 }
 
 module.exports = handlers;

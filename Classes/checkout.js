@@ -138,7 +138,8 @@ class Checkout{
                     const order = 
                     {
                       orderId:service.createRandomString(20),
-                      products:products
+                      products:products,
+                      timeOrdered:Date.now()
                     }
                     let orders = await data.get('orders', email)
                    

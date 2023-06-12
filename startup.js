@@ -89,6 +89,7 @@ module.exports = function startup(app) {
   gets("users/getAllProductsBeingSoldByUser");
   gets("users/getUserDetails");
   gets("users/getProfile");
+  gets('orders')
   gets('users/searchUser')
   deletes("products");
   deletes('reviews')

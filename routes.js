@@ -26,7 +26,8 @@ const routes = {
   'products/getByName':handlers.getByName,
   'checkout':handlers.checkout,
   'guestCheckout':handlers.guestCheckout,
-  'checkout/processCheckout':handlers.processCheckout
+  'checkout/processCheckout':handlers.processCheckout,
+  'orders':handlers.orders
 };
 
 module.exports = routes;
