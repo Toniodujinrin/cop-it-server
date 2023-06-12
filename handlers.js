@@ -38,7 +38,7 @@ handlers.orders = {}
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
-  console.log(_data.email);
+
   const token = data.headers.token;
 
   const res = await new Product(
@@ -58,6 +58,15 @@ handlers.products.get = async (data, callback) => {
   const res = await new Product().get(productId);
   callback(res.status, { data: res.message });
 };
+handlers.products.put = async(data,callback)=>{
+  const _data = data.payload;
+  const token = data.headers.token;
+  const res = await Product.put(
+    _data.name,_data.productId,_data.category, _data.numberInStock, _data.description, _data.price, _data.isAvailable,token, _data.sellerId
+  )
+  callback(res.status,{data:res.message})
+
+}
 handlers.products.delete = async (data, callback) => {
   const productId = data.query.productId;
   const res = await Product.delete(productId);

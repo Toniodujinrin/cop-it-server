@@ -167,6 +167,39 @@ module.exports = class Product {
   else return ResponseErrors.incorrectData
 }
 
+ static async put(name,productId,category,numberInStock, description, price, isAvailable, token, sellerId){
+  if ( (Validator.numberValidator([price]) || Validator.numberValidator([numberInStock]) ||  Validator.stringValidate([category]) || Validator.stringValidate([description]) || Validator.stringValidate([]) ||  Validator.stringValidate([name]))  && Validator.stringValidate([productId, sellerId,token])){
+   try {
+
+    if(await Token.validate(token, sellerId)){
+    const product = await data.get('products',productId)
+    if(product.sellerId == sellerId){
+      if(name)product.name = name;
+      if(category)product.category = category
+      if(description)product.description = description
+      if(numberInStock)product.numberInStock = numberInStock
+      if(isAvailable)product.isAvailable = isAvailable
+      else product.isAvailable = false
+      if(price)product.price = price
+
+      await data.put('products',productId,product)
+      return{
+        status:StatusCodes.OK,
+        message:'Product updated'
+      }
+    }
+    else return ResponseErrors.invalidToken
+   }
+   else return ResponseErrors.invalidToken
+       
+  } catch (error) {
+    return ResponseErrors.serverError
+  }
+
+  }
+  else return ResponseErrors.incorrectData
+}
+
 
   
 };

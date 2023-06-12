@@ -93,4 +93,5 @@ module.exports = function startup(app) {
   gets('users/searchUser')
   deletes("products");
   deletes('reviews')
+  puts('products')
 };
