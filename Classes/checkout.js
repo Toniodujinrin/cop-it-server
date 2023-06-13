@@ -135,11 +135,19 @@ class Checkout{
                 })
                 await Promise.all(__products)
                 if(checkoutEligible){
+                    let total = 0
+                  
+                  products.forEach(product =>{
+                    
+                    total += product.amount*product.product.price
+        
+                  })
                     const order = 
                     {
                       orderId:service.createRandomString(20),
                       products:products,
-                      timeOrdered:Date.now()
+                      timeOrdered:Date.now(),
+                      total:total
                     }
                     let orders = await data.get('orders', email)
                    
