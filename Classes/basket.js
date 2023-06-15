@@ -11,6 +11,14 @@ class Basket {
       if (user && (await Token.validate(token, email))) {
         const basket = await data.get("baskets", email);
         if (basket) {
+          const _resolve = basket.items.map(async item=>{
+            const product = await data.get('products',item.productId)
+            
+            if(product) item.product = product
+           
+          }
+            )
+            await Promise.all(_resolve)
           return {
             status: StatusCodes.OK,
             message: basket,
@@ -36,31 +44,27 @@ class Basket {
               let basket = await data.get("baskets", email);
               if (basket) {
                 const filteredBasket = basket.items.filter(
-                  (item) => item.product._id === productId
+                  (item) => item.productId === productId
                 );
                 if (filteredBasket.length > 0) {
                   if (amount === 0) {
                     basket.items = basket.items.filter(
-                      (item) => item.product._id !== productId
+                      (item) => item.productId !== productId
                     );
                   } else {
                     basket.items.map((item) => {
-                      if (item.product._id === productId) {
+                      if (item.productId === productId && item.amount <= product.numberInStock) {
                         item.amount = amount;
                       }
+                      else return ResponseErrors.amountExceeded
                     });
                   }
-                  if(basket.items.find(item => item.product._id===productId).amount <= product.numberInStock){
                     await data.put("baskets", email, basket);
                     return {
                       status: StatusCodes.OK,
                       message: "item added to basket",
                     };
-                  }
-                  else return {
-                    status:StatusCodes.BAD_REQUEST,
-                    message:'amount to large for supply'
-                  };
+                  
                 } else return ResponseErrors.productNotFound;
               } else return ResponseErrors.basketEmpty;
             } else return ResponseErrors.productNotFound;
@@ -80,33 +84,24 @@ class Basket {
           if (await Token.validate(token, email)) {
             const product = await data.get("products", productId);
             if (product) {
+              if(product.numberInStock >= amount){
               const basket = await data.get("baskets", email);
               if (basket) {
                 if (
-                  basket.items.filter((item) => item.product._id === productId)
+                  basket.items.filter((item) => item.productId === productId)
                     .length > 0
                 ) {
                   basket.items.map((item) => {
-                    if (item.product._id === productId) {
-                      console.log(item);
-                      item.amount = item.amount + amount;
-                    }
+                    if (item.productId === productId) {
+                      if(item.amount+amount <= product.numberInStock){
+                         item.amount = item.amount + amount;
+                      }
+                      else return ResponseErrors.amountExceeded
+                     }
                   });
+                  
                 } else {
-                  basket.items.unshift({ product: product, amount: amount });
-                }
-
-                
-                if(basket.items.find(item => item.product._id===productId).amount <= product.numberInStock){
-                  await data.put("baskets", email, basket);
-                  return {
-                    status: StatusCodes.OK,
-                    message: "item added to basket",
-                  };
-                }
-                else return {
-                  status:StatusCodes.BAD_REQUEST,
-                  message:'amount to large for supply'
+                  basket.items.unshift({ productId: productId, amount: amount });
                 }
 
               
@@ -116,7 +111,7 @@ class Basket {
                     _id: email,
                     items: [
                       {
-                        product: product,
+                        productId: productId,
                         amount: amount,
                       },
                     ],
@@ -125,16 +120,14 @@ class Basket {
                   await data.post("baskets", _basket);
                   return {
                     status: StatusCodes.OK,
-                    message: "item added tp basket",
+                    message: "item added to basket",
                   };
                 }
-                else return {
-
-                  status:StatusCodes.BAD_REQUEST,
-                  message:'amount to large for supply'
-                }
+                else return ResponseErrors.amountExceeded
               
               }
+            }
+            else return ResponseErrors.amountExceeded
             } else return ResponseErrors.productNotFound;
           } else return ResponseErrors.invalidToken;
         } else return ResponseErrors.userNotFound;
@@ -151,12 +144,12 @@ class Basket {
           const basket = await data.get("baskets", email);
           if (basket) {
             const product = basket.items.find(
-              (item) => item.product._id == productId
+              (item) => item.productId == productId
             );
             if (product) {
               basket.items = basket.items.filter((item) => item !== product);
               await data.put("baskets", email, basket);
-              console.log(basket, basket.items, product);
+              
               return {
                 status: StatusCodes.OK,
                 message: "Item removed from basket",

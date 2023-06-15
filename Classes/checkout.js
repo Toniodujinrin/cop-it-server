@@ -23,11 +23,15 @@ class Checkout{
             if(await data.get('checkout',this.email)){
                 await data.delete('checkout',this.email)
             }
+
             let total = 0
             let items = 0
             this.products.forEach(product =>{
                 items += product.amount
                 total += product.amount*product.product.price
+            })
+            this.products.map(product=>{
+                delete product.product
             })
             const checkoutData = {
                 _id : this.email,
@@ -62,6 +66,7 @@ class Checkout{
             total += product.amount*product.product.price
 
           })
+          products.map(product=> delete product.product)
           const checkoutId = service.createRandomString(20)
           const checkoutData = {
             _id : checkoutId ,
@@ -89,6 +94,11 @@ class Checkout{
            try {
             const checkout = await data.get('guest-checkout',checkoutId)
             if(checkout){
+               const _resolve =  checkout.products.map( async item=>{
+                const product = await data.get('products',item.productId)
+                item.product = product
+               })
+               await Promise.all(_resolve)
                 return{
                     status:StatusCodes.OK,
                     message:checkout
@@ -106,6 +116,11 @@ class Checkout{
             if(await Token.validate(token,email)){
               const checkout = await data.get('checkout', email)
               if(checkout){
+                const _resolve =  checkout.products.map( async item=>{
+                    const product = await data.get('products',item.productId)
+                    if(product)item.product = product
+                   })
+                   await Promise.all(_resolve)
                  return {
                 status:StatusCodes.OK,
                 message:checkout
@@ -120,20 +135,26 @@ class Checkout{
         
     }
 
+    static async processGuestCheckout (products,  firstName, address,lastName,email, phone,  ){
+        products = typeof products == 'object' && products
+
+        
+    }
+
     static async processCheckout (products, email, token){
         products = typeof products == 'object' && products instanceof Array? products: false
         if(products && Validator.stringValidate([token,email])){
             try {
              if (await Token.validate(token,email)){
                 let checkoutEligible = true 
-                const __products = products.map(async product=>{
-                    const __product = await data.get('products', product.product._id)
+                const _resolve = products.map(async product=>{
+                    const __product = await data.get('products', product.productId)
                     if(!__product.isAvailable){
                      checkoutEligible = false
                     }
                     console.log(__product)
                 })
-                await Promise.all(__products)
+                await Promise.all(_resolve)
                 if(checkoutEligible){
                     let total = 0
                   

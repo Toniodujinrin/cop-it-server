@@ -97,7 +97,7 @@ module.exports = class Product {
           const baskets = await data.getAll('baskets',{})
           baskets.forEach(basket =>{
            
-            const newBasket = basket.items.filter(item => item.product._id !== productId )
+            const newBasket = basket.items.filter(item => item.productId !== productId )
            
             basket.items = newBasket
             data.put('baskets',basket._id,basket)

@@ -39,5 +39,10 @@ module.exports = class ResponseErrors {
     status:StatusCodes.BAD_REQUEST,
     message:'Invalid checkout'
   }
+  static amountExceeded = {
+
+    status:StatusCodes.BAD_REQUEST,
+    message:'amount to large for supply'
+  }
   
 };
