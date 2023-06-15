@@ -107,6 +107,13 @@ class Basket {
                   basket.items.unshift({ productId: productId, amount: amount });
                 }
 
+
+                await data.put('baskets',email,basket)
+                  return {
+                  status: StatusCodes.OK,
+                  message: "item added to basket",
+                };
+
               
               } else {
                 if(amount <= product.numberInStock){
