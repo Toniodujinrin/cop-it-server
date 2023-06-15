@@ -31,6 +31,7 @@ class Checkout{
                 total += product.amount*product.product.price
             })
             this.products.map(product=>{
+                product.productId = product._id
                 delete product.product
             })
             const checkoutData = {
