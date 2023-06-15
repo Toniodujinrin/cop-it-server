@@ -98,9 +98,10 @@ class Checkout{
            try {
             const checkout = await data.get('guest-checkout',checkoutId)
             if(checkout){
-               const _resolve =  checkout.products.map( async item=>{
+                const _resolve =  checkout.products.map( async item=>{
                 const product = await data.get('products',item.productId)
-                item.product = product
+                if(product)item.product = product
+                delete item.productId
                })
                await Promise.all(_resolve)
                 return{
@@ -123,6 +124,7 @@ class Checkout{
                 const _resolve =  checkout.products.map( async item=>{
                     const product = await data.get('products',item.productId)
                     if(product)item.product = product
+                    delete item.productId
                    })
                    await Promise.all(_resolve)
                  return {
