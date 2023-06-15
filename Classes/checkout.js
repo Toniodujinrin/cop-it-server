@@ -31,7 +31,7 @@ class Checkout{
                 total += product.amount*product.product.price
             })
             this.products.map(product=>{
-                product.productId = product._id
+                product.productId = product.product._id
                 delete product.product
             })
             const checkoutData = {
@@ -67,7 +67,10 @@ class Checkout{
             total += product.amount*product.product.price
 
           })
-          products.map(product=> delete product.product)
+          products.map(product=>{
+            delete product.product
+            product.productId = product.product._id
+          } )
           const checkoutId = service.createRandomString(20)
           const checkoutData = {
             _id : checkoutId ,

@@ -14,7 +14,10 @@ class Basket {
           const _resolve = basket.items.map(async item=>{
             const product = await data.get('products',item.productId)
             
-            if(product) item.product = product
+            if(product){
+              item.product = product
+              delete item.productId
+            } 
            
           }
             )
