@@ -11,6 +11,7 @@ class Basket {
       if (user && (await Token.validate(token, email))) {
         const basket = await data.get("baskets", email);
         if (basket) {
+          //get the basket from DB and replace product ID in db with actual product object 
           const _resolve = basket.items.map(async item=>{
             const product = await data.get('products',item.productId)
             
@@ -94,29 +95,27 @@ class Basket {
                   basket.items.filter((item) => item.productId === productId)
                     .length > 0
                 ) {
+                  let itemAmount = 0 
                   basket.items.map((item) => {
-                    if (item.productId === productId) {
-                      if(item.amount+amount <= product.numberInStock){
-                         item.amount = item.amount + amount;
-                      }
-                      else return ResponseErrors.amountExceeded
-                     }
+                    if ((item.productId === productId)) {
+                      item.amount = item.amount + amount;
+                      itemAmount= item.amount
+                    }
                   });
-                  
-                } else {
+
+                  if(itemAmount > product.numberInStock) return ResponseErrors.amountExceeded
+                  } else {
                   basket.items.unshift({ productId: productId, amount: amount });
-                }
+                  }
 
-
-                await data.put('baskets',email,basket)
+                  await data.put('baskets',email,basket)
                   return {
-                  status: StatusCodes.OK,
-                  message: "item added to basket",
-                };
-
-              
-              } else {
-                if(amount <= product.numberInStock){
+                    status:StatusCodes.OK,
+                    message:'Item added to basket'
+                  }
+                } 
+                else {
+                
                   const _basket = {
                     _id: email,
                     items: [
@@ -132,12 +131,8 @@ class Basket {
                     status: StatusCodes.OK,
                     message: "item added to basket",
                   };
-                }
-                else return ResponseErrors.amountExceeded
-              
-              }
             }
-            else return ResponseErrors.amountExceeded
+            }else return ResponseErrors.amountExceeded
             } else return ResponseErrors.productNotFound;
           } else return ResponseErrors.invalidToken;
         } else return ResponseErrors.userNotFound;
