@@ -154,7 +154,7 @@ class Checkout{
              if (await Token.validate(token,email)){
                 let checkoutEligible = true 
                 const _resolve = products.map(async product=>{
-                    const __product = await data.get('products', product.productId)
+                    const __product = await data.get('products', product.product._id)
                     if(!__product.isAvailable){
                      checkoutEligible = false
                     }
