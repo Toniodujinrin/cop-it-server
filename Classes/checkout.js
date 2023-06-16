@@ -192,7 +192,7 @@ class Checkout{
                     }
                     await data.delete('checkout',email)
                     const basket = await data.get('baskets',email)
-                    basket.items = basket.items.filter(product=> !products.find(_product => _product.product._id == product.product._id))
+                    basket.items = basket.items.filter(product=> !products.find(_product => _product.product._id == product.productId))
                    
                     await data.put('baskets',email,basket)
     
