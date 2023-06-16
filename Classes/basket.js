@@ -55,14 +55,16 @@ class Basket {
                     basket.items = basket.items.filter(
                       (item) => item.productId !== productId
                     );
-                  } else {
+                  } else if(amount<= product.numberInStock) {
+                    
                     basket.items.map((item) => {
-                      if (item.productId === productId && item.amount <= product.numberInStock) {
+                      if (item.productId === productId) {
                         item.amount = amount;
                       }
                       else return ResponseErrors.amountExceeded
                     });
                   }
+                  else return ResponseErrors.amountExceeded
                     await data.put("baskets", email, basket);
                     return {
                       status: StatusCodes.OK,
