@@ -93,7 +93,9 @@ module.exports = function startup(app) {
   gets('orders')
   gets('users/searchUser')
   deletes("products");
+  deletes('users')
   deletes('reviews')
   puts('products')
+  puts('users')
   
 };

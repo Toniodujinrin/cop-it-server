@@ -146,7 +146,53 @@ module.exports = class User {
     } else return ResponseErrors.incorrectData;
   }
 
-  static async getAllProductsBeingSoldByUser(email) {
+  static async put(email,token,firstName,lastName,phone, address){
+    if(Validator.stringValidate([email,token]) && (Validator.stringValidate([phone]) || Validator.stringValidate([lastName]) || Validator.stringValidate([firstName]) || Validator.stringValidate([address]))){
+      try {
+        if(await Token.validate(token,email)){
+          const user = await data.get('users',email)
+          if(firstName) user.firstName = firstName
+          if(lastName) user.lastName = lastName
+          if(phone) user.phone = phone
+          if(address) user.address = address 
+          await data.put('users',email)
+          }
+        else return ResponseErrors.invalidToken
+      } catch (error) {
+        return ResponseErrors.serverError
+      }
+    }
+    else return ResponseErrors.incorrectData
+}
+
+static async delete(email, token){
+  if(Validator.stringValidate([email,token])){
+    try {
+      if(await Token.validate(token,email)){
+          //delete everything concerning user such as products ,baskets, checkouts, reviews, do not delete orders for record purposes 
+          //delete checkout
+          await data.delete('checkout',email)
+          await data.delete('baskets', email)
+          const products = await data.getAll('products',{sellerId:email})
+          const _resolve1 = products.map(async (product)=> await  data.delete('products',product._id))
+          const reviews = await data.getAll('reviews',{seller:email})
+          const _resolve2 = reviews.map(async (review)=> await data.delete('reviews',review._id) )
+          await Promise.all(_resolve1); await Promise.all(_resolve2)
+          return({
+            status:StatusCodes.OK,
+            message:'user profile deleted'
+          })
+          
+      }
+      else return ResponseErrors.invalidToken
+    } catch (error) {
+      return ResponseErrors.serverError
+    }
+  }
+  else return ResponseErrors.incorrectData
+}
+
+static async getAllProductsBeingSoldByUser(email) {
     if (Validator.stringValidate([email])) {
       if (await data.get("users", email)) {
         const products = await data.getAll("products", { sellerId: email });

@@ -123,6 +123,18 @@ handlers.users.get = async (data, callback) => {
   const res = await User.get(email, token);
   callback(res.status, { data: res.message });
 };
+handlers.users.put = async(data,callback) =>{
+  const _data = data.payload; 
+  const token = data.headers.token; 
+  const res = await User.put(_data.email, token, _data.firstName, _data.lastName, _data.phone, _data.address)
+  callback(res.status, {data:res.message})
+}
+handlers.users.delete = async(data,callback)=>{
+  const email = data.payload.email; 
+  const token = data.headers.token
+  const res = await User.delete(email,token)
+  callback(res.status,{data:res.message})
+}
 handlers.getProfile.get = async (data, callback) => {
   const email = data.query.email;
   const res = await User.getProfile(email);
