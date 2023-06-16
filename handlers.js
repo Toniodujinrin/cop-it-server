@@ -35,6 +35,7 @@ handlers.checkout = {}
 handlers.guestCheckout = {}
 handlers.processCheckout = {}
 handlers.orders = {}
+handlers.processGuestCheckout ={}
 
 handlers.products.post = async (data, callback) => {
   const _data = data.payload;
@@ -277,6 +278,11 @@ handlers.guestCheckout.post = async (data,callback)=>{
 handlers.guestCheckout.get = async(data,callback)=>{
   const checkoutId = data.query.checkoutId
   const res = await Checkout.getGuestCheckout(checkoutId)
+  callback(res.status,{data:res.message})
+}
+handlers.processGuestCheckout.post = async(data,callback)=>{
+  const _data = data.payload 
+  const res = await Checkout.processGuestCheckout(_data.products, _data.firstName, _data.address, _data.lastName, _data.email, _data.phone)
   callback(res.status,{data:res.message})
 }
 

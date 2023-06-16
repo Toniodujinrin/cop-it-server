@@ -162,15 +162,20 @@ class Checkout{
                   total += product.amount*product.product.price
       
                 })
+                const orderId = service.createRandomString(20)
                   const order = 
                   {
-                    _id:service.createRandomString(20),
+                    _id:orderId,
                     products:products,
                     timeOrdered:Date.now(),
                     total:total
                   }
 
                   await data.post('guest-orders',order)
+                  return {
+                    status:StatusCodes.OK,
+                    message:'checkout successfull'
+                  }
                   
                  
                   

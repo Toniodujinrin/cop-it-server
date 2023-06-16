@@ -76,6 +76,7 @@ module.exports = function startup(app) {
   posts('checkout')
   posts('guestCheckout')
   posts('checkout/processCheckout')
+  posts('checkout/processCheckout')
   gets('guestCheckout')
   gets("auth/checkVerified");
   gets("users");
@@ -94,4 +95,5 @@ module.exports = function startup(app) {
   deletes("products");
   deletes('reviews')
   puts('products')
+  
 };
