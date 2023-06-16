@@ -69,8 +69,9 @@ class Checkout{
 
           })
           products.map(product=>{
-            delete product.product
+           
             product.productId = product.product._id
+            delete product.product
           } )
           const checkoutId = service.createRandomString(20)
           const checkoutData = {
@@ -87,6 +88,7 @@ class Checkout{
             message:{checkoutId:checkoutId}
            }
          } catch (error) {
+            console.log(error)
                  return ResponseErrors.serverError
             }
         }
