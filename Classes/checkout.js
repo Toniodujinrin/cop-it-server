@@ -4,6 +4,7 @@ const Data = require('../Utility-Methods/http')
 const { StatusCodes } = require('http-status-codes')
 const Services = require('../services')
 const Validator = require('../Utility-Methods/validator')
+const { stringValidate } = require('../Utility-Methods/validator')
 const service = new Services()
 const data = new Data()
 class Checkout{
@@ -142,7 +143,43 @@ class Checkout{
     }
 
     static async processGuestCheckout (products,  firstName, address,lastName,email, phone,  ){
-        products = typeof products == 'object' && products
+        products = typeof products == 'object' && products instanceof Array?products:false 
+        if(products && Validator.stringValidate([firstName,lastName,address,email,phone])){
+            let checkoutEligible = true 
+                const _resolve = products.map(async product=>{
+                    const __product = await data.get('products', product.product._id)
+                    if(!__product.isAvailable){
+                     checkoutEligible = false
+                    }
+                   
+                })
+                await Promise.all(_resolve)
+            if(checkoutEligible){
+                let total = 0
+                  
+                products.forEach(product =>{
+                  
+                  total += product.amount*product.product.price
+      
+                })
+                  const order = 
+                  {
+                    _id:service.createRandomString(20),
+                    products:products,
+                    timeOrdered:Date.now(),
+                    total:total
+                  }
+
+                  await data.post('guest-orders',order)
+                  
+                 
+                  
+
+            }
+            else return ResponseErrors.invalidCheckout
+
+        }
+        else return ResponseErrors.incorrectData
 
         
     }
@@ -158,7 +195,7 @@ class Checkout{
                     if(!__product.isAvailable){
                      checkoutEligible = false
                     }
-                    console.log(__product)
+                    
                 })
                 await Promise.all(_resolve)
                 if(checkoutEligible){
