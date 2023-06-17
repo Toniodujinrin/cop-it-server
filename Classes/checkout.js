@@ -174,6 +174,19 @@ class Checkout{
                   }
 
                   await data.post('guest-orders',order)
+                  const _resolve2 = products.map(async product=>{
+                        
+                    const __product = await data.get('products',product.product._id)
+                    __product.numberInStock -= product.amount
+                    if(__product.numberInStock == 0){
+                        __product.isAvailable = false 
+                    }
+                    await data.put('products',__product._id, __product)
+
+                })
+                await Promise.all(_resolve2)
+
+
                   return {
                     status:StatusCodes.OK,
                     message:'checkout successfull'
@@ -240,7 +253,7 @@ class Checkout{
                    
                     await data.put('baskets',email,basket)
     
-                    products.forEach(async product=>{
+                    const _resolve2 = products.map(async product=>{
                         
                         const __product = await data.get('products',product.product._id)
                         __product.numberInStock -= product.amount
@@ -250,6 +263,8 @@ class Checkout{
                         await data.put('products',__product._id, __product)
 
                     })
+                    await Promise.all(_resolve2)
+
                     return{
                         status:StatusCodes.OK,
                         message:'Checkout Successfull'

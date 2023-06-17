@@ -7,6 +7,7 @@ module.exports = function startup(app) {
       data.headers = req.headers;
       data.query = req.query;
       data.payload = req.body;
+      
 
       finish(res, currentRoute, "post", data);
     });
@@ -76,7 +77,7 @@ module.exports = function startup(app) {
   posts('checkout')
   posts('guestCheckout')
   posts('checkout/processCheckout')
-  posts('checkout/processCheckout')
+  posts('checkout/processGuestCheckout')
   gets('guestCheckout')
   gets("auth/checkVerified");
   gets("users");

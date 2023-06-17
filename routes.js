@@ -27,7 +27,7 @@ const routes = {
   'checkout':handlers.checkout,
   'guestCheckout':handlers.guestCheckout,
   'checkout/processCheckout':handlers.processCheckout,
-  'checkout/processCheckout':handlers.processGuestCheckout,
+  'checkout/processGuestCheckout':handlers.processGuestCheckout,
   'orders':handlers.orders
 };
 

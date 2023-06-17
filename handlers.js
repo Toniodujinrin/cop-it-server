@@ -277,6 +277,7 @@ handlers.checkout.get = async (data,callback)=>{
 handlers.processCheckout.post = async(data,callback)=>{
   const _data = data.payload
   const token = data.headers.token
+  
   const res = await Checkout.processCheckout(_data.products,_data.email,token)
   callback(res.status,{data:res.message})
 }
