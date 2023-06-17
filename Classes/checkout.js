@@ -170,7 +170,13 @@ class Checkout{
                     _id:orderId,
                     products:products,
                     timeOrdered:Date.now(),
-                    total:total
+                    total:total,
+                    email:email,
+                    firstName:firstName,
+                    lastName:lastName,
+                    phone:phone,
+                    address:address,
+                    
                   }
 
                   await data.post('guest-orders',order)
@@ -231,6 +237,7 @@ class Checkout{
                       orderId:service.createRandomString(20),
                       products:products,
                       timeOrdered:Date.now(),
+                      buyer:email,
                       total:total
                     }
                     let orders = await data.get('orders', email)
