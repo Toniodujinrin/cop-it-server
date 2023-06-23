@@ -178,6 +178,7 @@ static async delete(email, token){
           const reviews = await data.getAll('reviews',{seller:email})
           const _resolve2 = reviews.map(async (review)=> await data.delete('reviews',review._id) )
           await Promise.all(_resolve1); await Promise.all(_resolve2)
+          await data.delete('users',email)
           return({
             status:StatusCodes.OK,
             message:'user profile deleted'

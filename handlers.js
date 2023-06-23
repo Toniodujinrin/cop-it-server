@@ -130,7 +130,7 @@ handlers.users.put = async(data,callback) =>{
   callback(res.status, {data:res.message})
 }
 handlers.users.delete = async(data,callback)=>{
-  const email = data.payload.email; 
+  const email = data.query.email; 
   const token = data.headers.token
   const res = await User.delete(email,token)
   callback(res.status,{data:res.message})
