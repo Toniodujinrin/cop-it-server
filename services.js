@@ -63,7 +63,7 @@ module.exports = class Services {
     let details = {
       from: "Cop it",
       to: email,
-      subject: "OTP",
+      subject: "Order Confirmation",
       text: `use this code as your one time password`,
       html:html
       
