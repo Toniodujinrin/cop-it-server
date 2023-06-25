@@ -29,7 +29,7 @@ module.exports = class Auth {
           };
         }
       } catch (error) {
-        
+        console.log(error)
         return {
           status: StatusCodes.INTERNAL_SERVER_ERROR,
           message: "could not create token",

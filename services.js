@@ -1,4 +1,5 @@
 require("dotenv").config;
+const crypto = require('crypto')
 const nodemailer = require("nodemailer");
 module.exports = class Services {
   createRandomString(length) {
