@@ -268,7 +268,7 @@ class Checkout{
                         
                         await data.post('orders',orders)
                     }
-                    const user = data.get('users',email)
+                    const user = await  data.get('users',email)
                     const {firstName,lastName,address}= user
                     const templateConfig = {
                         "{firstName}":firstName,
