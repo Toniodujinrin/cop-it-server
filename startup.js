@@ -43,6 +43,8 @@ module.exports = function startup(app) {
     });
   };
 
+    
+
   const finish = (res, currentRoute, method, data) => {
     routes[currentRoute][method](data, (statusCode, responseObject) => {
       const stringPayload =
@@ -60,6 +62,7 @@ module.exports = function startup(app) {
       res.end();
     });
   };
+
   
   posts("products");
   posts("reviews");

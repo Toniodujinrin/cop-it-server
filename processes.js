@@ -24,13 +24,25 @@ class Processes{
             })
           await Promise.all(_codes)
         }
+
+      async function guestCheckoutProcess(){
+        const guestCheckouts = await data.getAll('guest-checkout')
+        const resolve = guestCheckouts.map(async guestCheckout =>{
+          if(guestCheckout.expiry< Date.now()){
+             await data.delete('guest-checkout', guestCheckout._id)
+          }
+        })
+        
+        await Promise.all(resolve)
+      }
         
         await codesProcesses()
         await tokenProcesses()
-        
+        await guestCheckoutProcess()
         setInterval(()=>{
           codesProcesses()
           tokenProcesses()
+          guestCheckoutProcess()
         },1000*30)
       
     }

@@ -104,6 +104,7 @@ module.exports = class Auth {
       try {
         const user = await data.get("users", email);
         if (user) {
+          
           service.emailCodeSender(user.email, 5, (code) => {
             const codeObject = {
               _id: code,

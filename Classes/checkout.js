@@ -5,6 +5,8 @@ const { StatusCodes } = require('http-status-codes')
 const Services = require('../services')
 const Validator = require('../Utility-Methods/validator')
 const { stringValidate } = require('../Utility-Methods/validator')
+const Templates = require('./EmailTemplates')
+
 const service = new Services()
 const data = new Data()
 class Checkout{
@@ -180,6 +182,17 @@ class Checkout{
                   }
 
                   await data.post('guest-orders',order)
+                  const templateConfig = {
+                    "{firstName}":firstName,
+                    "{orderID}":orderId,
+                    "{lastName}":lastName,
+                    "{total}":`$${total}`,
+                    "{address}":address,
+                    "{fullName}":`${firstName} ${lastName}`
+                  }
+                  const confirmationEmail = Templates.formatConfirmationEmail(templateConfig)
+                  service.confirmationMailSender(confirmationEmail,email)
+                
                   const _resolve2 = products.map(async product=>{
                         
                     const __product = await data.get('products',product.product._id)
@@ -232,9 +245,10 @@ class Checkout{
                     total += product.amount*product.product.price
         
                   })
+                   const orderId = service.createRandomString(20)
                     const order = 
                     {
-                      orderId:service.createRandomString(20),
+                      orderId:orderId,
                       products:products,
                       timeOrdered:Date.now(),
                       buyer:email,
@@ -254,6 +268,18 @@ class Checkout{
                         
                         await data.post('orders',orders)
                     }
+                    const user = data.get('users',email)
+                    const {firstName,lastName,address}= user
+                    const templateConfig = {
+                        "{firstName}":firstName,
+                        "{orderID}":orderId,
+                        "{lastName}":lastName,
+                        "{total}":`$${total}`,
+                        "{address}":address,
+                        "{fullName}":`${firstName} ${lastName}`
+                      }
+                      const confirmationEmail = Templates.formatConfirmationEmail(templateConfig)
+                      service.confirmationMailSender(confirmationEmail,email)
                     await data.delete('checkout',email)
                     const basket = await data.get('baskets',email)
                     basket.items = basket.items.filter(product=> !products.find(_product => _product.product._id == product.productId))

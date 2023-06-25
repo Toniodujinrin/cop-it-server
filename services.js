@@ -1,4 +1,3 @@
-const crypto = require("crypto");
 require("dotenv").config;
 const nodemailer = require("nodemailer");
 module.exports = class Services {
@@ -38,7 +37,9 @@ module.exports = class Services {
       to: email,
       subject: "OTP",
       text: `use this code as your one time password  ${string}`,
+      
     };
+    
 
     transporter.sendMail(details, (err) => {
       if (err) {
@@ -49,4 +50,34 @@ module.exports = class Services {
       }
     });
   }
+
+  confirmationMailSender = (html,email)=>{
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.TEST_EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+    let details = {
+      from: "Cop it",
+      to: email,
+      subject: "OTP",
+      text: `use this code as your one time password`,
+      html:html
+      
+    };
+    
+
+    transporter.sendMail(details, (err) => {
+      if (err) {
+        console.log("\x1b[34m%s\x1b[0m", err);
+      } else {
+        console.log("\x1b[34m%s\x1b[0m", `email successfuly sent to ${email}`);
+       }
+    });
+  
+  }
 };
+
+
