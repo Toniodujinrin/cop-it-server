@@ -282,9 +282,13 @@ class Checkout{
                       service.confirmationMailSender(confirmationEmail,email)
                     await data.delete('checkout',email)
                     const basket = await data.get('baskets',email)
-                    basket.items = basket.items.filter(product=> !products.find(_product => _product.product._id == product.productId))
+                    if(basket){
+                      basket.items = basket.items.filter(product=> !products.find(_product => _product.product._id == product.productId))
+                      await data.put('baskets',email,basket)
+                    }
+                    
                    
-                    await data.put('baskets',email,basket)
+                   
     
                     const _resolve2 = products.map(async product=>{
                         
