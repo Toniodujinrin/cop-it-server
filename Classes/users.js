@@ -155,8 +155,13 @@ module.exports = class User {
           if(lastName) user.lastName = lastName
           if(phone) user.phone = phone
           if(address) user.address = address 
-          await data.put('users',email)
+          await data.put('users',email,user)
+          return{
+            status:StatusCodes.OK,
+            message:'User Information Update'
           }
+          }
+          
         else return ResponseErrors.invalidToken
       } catch (error) {
         return ResponseErrors.serverError
