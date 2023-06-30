@@ -1,4 +1,3 @@
-require("dotenv").config;
 const { MongoClient, FindCursor } = require("mongodb");
 const uri = process.env.MONGO_URI;
 var settings = {
