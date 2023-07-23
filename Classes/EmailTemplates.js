@@ -10,7 +10,7 @@ class Templates{
     const confirmationEmailTemplate = fs.readFileSync(`${basePath}index.html`,'utf-8')
     let interpolatedEmail = confirmationEmailTemplate
     for(let key in formatConfig){
-        console.log(key)
+        
         interpolatedEmail = interpolatedEmail.replace(key,formatConfig[key])
     }
     return(interpolatedEmail)

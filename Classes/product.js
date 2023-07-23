@@ -118,7 +118,7 @@ module.exports = class Product {
   static async getFeatured(){
     try {
       const products = await data.getAll('products',{})
-      console.log(products)
+      
       return {
         status:StatusCodes.OK,
         message:products.slice(0,9)

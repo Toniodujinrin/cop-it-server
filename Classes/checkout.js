@@ -4,7 +4,6 @@ const Data = require('../Utility-Methods/http')
 const { StatusCodes } = require('http-status-codes')
 const Services = require('../services')
 const Validator = require('../Utility-Methods/validator')
-const { stringValidate } = require('../Utility-Methods/validator')
 const Templates = require('./EmailTemplates')
 
 const service = new Services()

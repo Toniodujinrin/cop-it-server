@@ -8,6 +8,8 @@ const Image = require("./Classes/images");
 const Checkout = require("./Classes/checkout");
 const Orders = require("./Classes/orders");
 
+
+
 handlers.products = {};
 handlers.reviews = {};
 handlers.users = {};
