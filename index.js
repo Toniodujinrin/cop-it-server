@@ -13,7 +13,7 @@ Processes.init()
 app.use(express.static("statics"))
 
 app.use("/",(req,res)=>{
-  res.send("welcom")
+  res.send("welcome")
 })
 
 app.use(bodyParser.json({ limit: "50mb" }));
