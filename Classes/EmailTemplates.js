@@ -7,7 +7,7 @@ const services = new Services()
 
 class Templates{
     static formatConfirmationEmail = (formatConfig)=>{
-    const confirmationEmailTemplate = fs.readFileSync(`${basePath}index.html`,'utf-8')
+    const confirmationEmailTemplate = fs.readFileSync(`${basePath}confirmation.html`,'utf-8')
     let interpolatedEmail = confirmationEmailTemplate
     for(let key in formatConfig){
         

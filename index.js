@@ -10,6 +10,10 @@ const Processes = require('./processes')
 const app = express();
 Processes.init()
 
+app.use(express.static("statics"))
+
+
+
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
   bodyParser.urlencoded({
@@ -20,6 +24,10 @@ app.use(
 );
 app.use(cors());
 app.use(bodyParser.json());
+
+
+
+
 startup(app);
 
  
@@ -29,6 +37,7 @@ const httpsServer = https.createServer({
   cert: fs.readFileSync("./cert/cert.pem","utf-8")
   },app)
 
+const httpServer = http.createServer(app)
 
 httpsServer.listen(process.env.HTTPS_PORT,()=>{
   console.log(
@@ -37,9 +46,7 @@ httpsServer.listen(process.env.HTTPS_PORT,()=>{
   )
 })
 
-
-
-app.listen(process.env.EXPRESS_PORT, () => {
+httpServer.listen(process.env.EXPRESS_PORT, () => {
   console.log(
     "\x1b[36m%s\x1b[0m",
     ` express server is listening on port ${process.env.EXPRESS_PORT}`
