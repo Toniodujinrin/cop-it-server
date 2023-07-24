@@ -41,12 +41,12 @@ const httpsServer = https.createServer({
 
 const httpServer = http.createServer(app)
 
-httpsServer.listen(process.env.HTTPS_PORT,()=>{
-  console.log(
-  "\x1b[35m%s\x1b[0m",
-    ` https server is listening on port ${process.env.HTTPS_PORT}`
-  )
-})
+// httpsServer.listen(process.env.HTTPS_PORT,()=>{
+//   console.log(
+//   "\x1b[35m%s\x1b[0m",
+//     ` https server is listening on port ${process.env.HTTPS_PORT}`
+//   )
+// })
 
 httpServer.listen(process.env.EXPRESS_PORT, () => {
   console.log(
