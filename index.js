@@ -11,10 +11,10 @@ const app = express();
 Processes.init()
 
 app.use(express.static("statics"))
-
-app.use("/",(req,res)=>{
+app.get("/",(req,res)=>{
   res.send("welcome")
 })
+
 
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
