@@ -5,7 +5,6 @@ const service = new Services();
 const data = new Data();
 const Token = require("./token");
 const ResponseErrors = require("../Utility-Methods/errors");
-const { invalidToken } = require("../Utility-Methods/errors");
 const Validator = require("../Utility-Methods/validator");
 
 module.exports = class User {
